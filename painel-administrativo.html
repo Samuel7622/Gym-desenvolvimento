@@ -1,0 +1,2159 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GYM P2 - Painel Administrativo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-green: #00ff88;
+            --primary-green-dark: #00cc6d;
+            --primary-green-light: #99ffcc;
+            --primary-black: #000000;
+            --primary-black-light: #111111;
+            --primary-gray: #545b67;
+            --primary-gray-dark: #3a3f48;
+            --primary-gray-light: #6b7280;
+            --accent: #f5fff5;
+            --text-light: #ffffff;
+            --text-dark: #000000;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--primary-black-light);
+            color: var(--text-light);
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background-color: var(--primary-black);
+            color: var(--text-light);
+            padding: 20px 0;
+            border-right: 2px solid var(--primary-green);
+        }
+
+        .logo {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--primary-gray);
+            margin-bottom: 20px;
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+            color: var(--primary-green);
+        }
+
+        .logo p {
+            color: var(--primary-gray-light);
+            font-size: 0.9rem;
+        }
+
+        .nav-links {
+            list-style: none;
+        }
+
+        .nav-links li {
+            padding: 12px 20px;
+            border-left: 4px solid transparent;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .nav-links li:hover {
+            background-color: var(--primary-gray-dark);
+            border-left: 4px solid var(--primary-green);
+        }
+
+        .nav-links li.active {
+            background-color: var(--primary-gray-dark);
+            border-left: 4px solid var(--primary-green);
+        }
+
+        .nav-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-links i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: var(--primary-black-light);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 15px 20px;
+            background-color: var(--primary-gray);
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            border-left: 4px solid var(--primary-green);
+        }
+
+        .header h2 {
+            color: var(--text-light);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-info img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+            background-color: var(--primary-green);
+        }
+
+        .user-info div div:first-child {
+            color: var(--text-light);
+        }
+
+        .user-info div div:last-child {
+            color: var(--primary-green-light);
+        }
+
+        /* Cards */
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background-color: var(--primary-gray);
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            padding: 20px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+            border: 1px solid var(--primary-gray-dark);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background-color: var(--primary-green);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,255,136,0.2);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .card-title {
+            font-size: 1rem;
+            color: var(--primary-green-light);
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-light);
+        }
+
+        .card-icon.gym {
+            background-color: var(--primary-green-dark);
+        }
+
+        .card-icon.owner {
+            background-color: var(--primary-gray-dark);
+        }
+
+        .card-icon.personal {
+            background-color: var(--primary-green);
+            color: var(--primary-black);
+        }
+
+        .card-icon.admin {
+            background-color: var(--primary-gray-light);
+        }
+
+        .card-value {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--text-light);
+        }
+
+        .card-footer {
+            font-size: 0.8rem;
+            color: var(--primary-green-light);
+        }
+
+        /* Tables */
+        .section {
+            background-color: var(--primary-gray);
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+            overflow: hidden;
+            border: 1px solid var(--primary-gray-dark);
+        }
+
+        .section-header {
+            padding: 15px 20px;
+            background-color: var(--primary-gray-dark);
+            border-bottom: 1px solid var(--primary-gray-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            color: var(--text-light);
+        }
+
+        .btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-green);
+            color: var(--primary-black);
+            font-weight: bold;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-green-dark);
+            color: var(--text-light);
+            transform: translateY(-2px);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--primary-gray-light);
+            color: var(--text-light);
+        }
+
+        th {
+            background-color: var(--primary-gray-dark);
+            font-weight: 600;
+            color: var(--primary-green-light);
+        }
+
+        tr:hover {
+            background-color: var(--primary-gray-dark);
+        }
+
+        .status {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status.active {
+            background-color: rgba(0, 255, 136, 0.2);
+            color: var(--primary-green);
+        }
+
+        .status.inactive {
+            background-color: rgba(84, 91, 103, 0.5);
+            color: var(--primary-gray-light);
+        }
+
+        .status.pending {
+            background-color: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            margin-right: 10px;
+            color: var(--primary-green);
+            transition: color 0.3s;
+        }
+
+        .action-btn:hover {
+            color: var(--primary-green-light);
+        }
+
+        /* Personals Special Section */
+        .personals-hero {
+            background: linear-gradient(to right, var(--primary-gray-dark), var(--primary-gray));
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            padding: 30px;
+            color: var(--text-light);
+            margin-bottom: 20px;
+            border-left: 4px solid var(--primary-green);
+        }
+
+        .personals-hero-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .personals-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background-color: var(--primary-gray);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            border: 1px solid var(--primary-gray-dark);
+            position: relative;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary-green);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--primary-green-light);
+        }
+
+        /* Search Bar */
+        .search-container {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary-green);
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 10px 10px 35px;
+            background-color: var(--primary-gray);
+            border: 1px solid var(--primary-gray-dark);
+            border-radius: 4px;
+            font-size: 1rem;
+            color: var(--text-light);
+            transition: all 0.3s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 2px rgba(0,255,136,0.2);
+        }
+
+        .search-input::placeholder {
+            color: var(--primary-gray-light);
+        }
+
+        /* Custom status for admin level */
+        .admin-level {
+            background-color: rgba(0, 255, 136, 0.2);
+            color: var(--primary-green);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background-color: var(--primary-gray);
+            margin: 50px auto;
+            padding: 0;
+            width: 90%;
+            max-width: 800px;
+            border-radius: 8px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.5);
+            border: 2px solid var(--primary-green);
+            overflow: hidden;
+        }
+
+        .modal-header {
+            padding: 20px;
+            background-color: var(--primary-gray-dark);
+            border-bottom: 1px solid var(--primary-gray-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            color: var(--primary-green);
+            font-size: 1.5rem;
+        }
+
+        .close-btn {
+            color: var(--text-light);
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close-btn:hover {
+            color: var(--primary-green);
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--primary-green-light);
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary-black-light);
+            border: 1px solid var(--primary-gray-dark);
+            border-radius: 4px;
+            color: var(--text-light);
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 2px rgba(0,255,136,0.2);
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .photo-upload-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .photo-preview {
+            width: 150px;
+            height: 150px;
+            border-radius: 8px;
+            background-color: var(--primary-black-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px dashed var(--primary-gray-dark);
+            overflow: hidden;
+        }
+
+        .photo-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+
+        .photo-preview i {
+            font-size: 3rem;
+            color: var(--primary-gray-light);
+        }
+
+        .upload-btn {
+            background-color: var(--primary-green);
+            color: var(--primary-black);
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            border: none;
+        }
+
+        .upload-btn:hover {
+            background-color: var(--primary-green-dark);
+            color: var(--text-light);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .modal-footer {
+            padding: 20px;
+            background-color: var(--primary-gray-dark);
+            border-top: 1px solid var(--primary-gray-light);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .btn-secondary {
+            background-color: var(--primary-gray-light);
+            color: var(--text-light);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--primary-gray);
+        }
+
+        .gym-photo-table {
+            width: 60px;
+            height: 60px;
+            border-radius: 4px;
+            object-fit: cover;
+            background-color: var(--primary-black-light);
+        }
+
+        /* Price styling */
+        .price-input-container {
+            position: relative;
+        }
+
+        .price-symbol {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary-green);
+            font-weight: bold;
+            z-index: 2;
+        }
+
+        .price-input-container input {
+            padding-left: 30px;
+        }
+
+        .price-display {
+            background-color: rgba(0, 255, 136, 0.1);
+            border: 1px solid var(--primary-green);
+            color: var(--primary-green);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        /* Type selector */
+        .type-selector {
+            display: flex;
+            gap: 10px;
+            margin-top: 5px;
+        }
+
+        .type-option {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            border: 2px solid var(--primary-gray-dark);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .type-option:hover {
+            border-color: var(--primary-gray-light);
+        }
+
+        .type-option.selected {
+            border-color: var(--primary-green);
+            background-color: rgba(0, 255, 136, 0.1);
+            color: var(--primary-green);
+        }
+
+        .type-option i {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        /* Facilities selector */
+        .facilities-selector {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 5px;
+        }
+
+        .facility-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px;
+            border: 1px solid var(--primary-gray-dark);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .facility-option:hover {
+            border-color: var(--primary-gray-light);
+        }
+
+        .facility-option.selected {
+            border-color: var(--primary-green);
+            background-color: rgba(0, 255, 136, 0.1);
+            color: var(--primary-green);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                border-right: none;
+                border-bottom: 2px solid var(--primary-green);
+            }
+            
+            .dashboard-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            table {
+                display: block;
+                overflow-x: auto;
+            }
+
+            .personals-hero-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .personals-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 20px auto;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .photo-upload-container {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .facilities-selector {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Hover effects for table rows */
+        tr {
+            transition: background-color 0.3s;
+        }
+
+        tr:hover {
+            background-color: var(--primary-gray-dark);
+        }
+
+        /* Green accents */
+        .green-accent {
+            color: var(--primary-green);
+        }
+
+        .green-bg {
+            background-color: var(--primary-green);
+        }
+
+        /* Border effects */
+        .border-green {
+            border-color: var(--primary-green);
+        }
+
+        /* Alert Message */
+        .alert {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            animation: slideDown 0.3s ease;
+        }
+
+        .alert-success {
+            background-color: rgba(0, 255, 136, 0.1);
+            border-left: 4px solid var(--primary-green);
+            color: var(--primary-green);
+        }
+
+        .alert-error {
+            background-color: rgba(255, 87, 87, 0.1);
+            border-left: 4px solid #ff5757;
+            color: #ff5757;
+        }
+
+        .alert-warning {
+            background-color: rgba(255, 193, 7, 0.1);
+            border-left: 4px solid #ffc107;
+            color: #ffc107;
+        }
+
+        .alert-close {
+            background: none;
+            border: none;
+            color: inherit;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background-color 0.3s;
+        }
+
+        .alert-close:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Details modal */
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .details-item {
+            background-color: var(--primary-black-light);
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid var(--primary-gray-dark);
+        }
+
+        .details-label {
+            font-size: 0.9rem;
+            color: var(--primary-green-light);
+            margin-bottom: 5px;
+        }
+
+        .details-value {
+            font-size: 1rem;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .details-facilities {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .facility-badge {
+            background-color: rgba(0, 255, 136, 0.1);
+            color: var(--primary-green);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .gym-details-photo {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <h1>GYM P2</h1>
+                <p>Painel Administrativo</p>
+            </div>
+            <ul class="nav-links">
+                <li class="active" data-tab="academias"><a href="#"><i class="fas fa-building"></i> Academias</a></li>
+                <li data-tab="proprietarios"><a href="#"><i class="fas fa-user-tie"></i> Proprietários</a></li>
+                <li data-tab="personais"><a href="#"><i class="fas fa-dumbbell"></i> Personais</a></li>
+                <li data-tab="administradores"><a href="#"><i class="fas fa-shield-alt"></i> Administradores</a></li>
+                <li><a href="#"><i class="fas fa-cog"></i> Configurações</a></li>
+                <li><a href="academias-publicas.html" target="_blank"><i class="fas fa-external-link-alt"></i> Ver Página Pública</a></li>
+                <li><a href="#"><i class="fas fa-sign-out-alt"></i> Sair</a></li>
+            </ul>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <h2>Painel Administrativo</h2>
+                <div class="user-info">
+                    <img src="https://via.placeholder.com/40/00ff88/000000?text=A" alt="Admin">
+                    <div>
+                        <div>Admin Master</div>
+                        <div style="font-size: 0.8rem;">Super Administrador</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Alert Container -->
+            <div id="alertContainer"></div>
+            
+            <!-- Search Bar -->
+            <div class="search-container">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" class="search-input" placeholder="Buscar..." id="searchInput">
+            </div>
+            
+            <!-- Dashboard Cards -->
+            <div class="dashboard-cards">
+                <div class="card" data-tab="academias">
+                    <div class="card-header">
+                        <div class="card-title">Academias Cadastradas</div>
+                        <div class="card-icon gym"><i class="fas fa-building"></i></div>
+                    </div>
+                    <div class="card-value">3</div>
+                    <div class="card-footer">+0 desde a última semana</div>
+                </div>
+                
+                <div class="card" data-tab="proprietarios">
+                    <div class="card-header">
+                        <div class="card-title">Proprietários</div>
+                        <div class="card-icon owner"><i class="fas fa-user-tie"></i></div>
+                    </div>
+                    <div class="card-value">3</div>
+                    <div class="card-footer">+0 desde ontem</div>
+                </div>
+                
+                <div class="card" data-tab="personais">
+                    <div class="card-header">
+                        <div class="card-title">Personais</div>
+                        <div class="card-icon personal"><i class="fas fa-dumbbell"></i></div>
+                    </div>
+                    <div class="card-value">24</div>
+                    <div class="card-footer">+5 desde a última semana</div>
+                </div>
+                
+                <div class="card" data-tab="administradores">
+                    <div class="card-header">
+                        <div class="card-title">Administradores</div>
+                        <div class="card-icon admin"><i class="fas fa-shield-alt"></i></div>
+                    </div>
+                    <div class="card-value">3</div>
+                    <div class="card-footer">Sem alterações</div>
+                </div>
+            </div>
+            
+            <!-- Content Sections -->
+            <div id="content-sections">
+                <!-- Academies Section -->
+                <div class="section" id="academias-section">
+                    <div class="section-header">
+                        <h3 class="section-title">Academias Cadastradas</h3>
+                        <button class="btn btn-primary" id="btnNovaAcademia">Nova Academia</button>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Foto</th>
+                                <th>Nome</th>
+                                <th>Endereço</th>
+                                <th>Preço</th>
+                                <th>Proprietário</th>
+                                <th>CNPJ</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- As academias serão carregadas dinamicamente aqui -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Owners Section -->
+                <div class="section" id="proprietarios-section" style="display: none;">
+                    <div class="section-header">
+                        <h3 class="section-title">Proprietários</h3>
+                        <button class="btn btn-primary">Novo Proprietário</button>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Email</th>
+                                <th>Telefone</th>
+                                <th>Academia</th>
+                                <th>Cadastro</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>João Silva</td>
+                                <td>joao@fitnesplus.com</td>
+                                <td>(11) 98765-4321</td>
+                                <td>Academia Fitness Plus</td>
+                                <td>15/01/2024</td>
+                                <td>
+                                    <button class="action-btn" title="Editar"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn" title="Excluir"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Maria Santos</td>
+                                <td>maria@powergym.com</td>
+                                <td>(21) 97654-3210</td>
+                                <td>Power Gym</td>
+                                <td>20/02/2024</td>
+                                <td>
+                                    <button class="action-btn" title="Editar"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn" title="Excluir"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Pedro Oliveira</td>
+                                <td>pedro@strong.com</td>
+                                <td>(31) 96543-2109</td>
+                                <td>Strong Academy</td>
+                                <td>10/03/2024</td>
+                                <td>
+                                    <button class="action-btn" title="Editar"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn" title="Excluir"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Personals Section -->
+                <div class="section" id="personais-section" style="display: none;">
+                    <div class="section-header">
+                        <h3 class="section-title">Gerenciamento de Personais</h3>
+                        <button class="btn btn-primary">Acessar Página de Personais</button>
+                    </div>
+                    
+                    <div class="personals-hero">
+                        <div class="personals-hero-content">
+                            <div>
+                                <h3 style="margin-bottom: 10px;">Personal Trainers Cadastrados</h3>
+                                <p style="margin-bottom: 15px; color: var(--primary-green-light);">Gerencie todos os profissionais cadastrados na plataforma</p>
+                                <div style="font-size: 2.5rem; font-weight: bold; color: var(--primary-green);">24</div>
+                                <p style="color: var(--primary-green-light);">personais ativos</p>
+                            </div>
+                            <div>
+                                <i class="fas fa-dumbbell" style="font-size: 5rem; color: var(--primary-green); opacity: 0.3;"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="personals-stats">
+                        <div class="stat-card">
+                            <div class="stat-value" style="color: var(--primary-green);">18</div>
+                            <div class="stat-label">Personais Ativos</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" style="color: #ffc107;">4</div>
+                            <div class="stat-label">Aguardando Aprovação</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" style="color: var(--primary-gray-light);">2</div>
+                            <div class="stat-label">Inativos</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Administrators Section -->
+                <div class="section" id="administradores-section" style="display: none;">
+                    <div class="section-header">
+                        <h3 class="section-title">Administradores do Sistema</h3>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Email</th>
+                                <th>Nível</th>
+                                <th>Último Acesso</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Ian</td>
+                                <td>admin@gymp2.com</td>
+                                <td><span class="status admin-level">Admin</span></td>
+                                <td>27/10/2025 14:30</td>
+                                <td><span class="status active">Ativo</span></td>
+                                <td>
+                                    <button class="action-btn" title="Editar"><i class="fas fa-edit"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Samuel</td>
+                                <td>carlos@gymp2.com</td>
+                                <td><span class="status admin-level">Admin</span></td>
+                                <td>27/10/2025 10:15</td>
+                                <td><span class="status active">Ativo</span></td>
+                                <td>
+                                    <button class="action-btn" title="Editar"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn" title="Excluir"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                             <tr>
+                                <td>Maicon</td>
+                                <td>carlos@gymp2.com</td>
+                                <td><span class="status admin-level">Admin</span></td>
+                                <td>27/10/2025 10:15</td>
+                                <td><span class="status active">Ativo</span></td>
+                                <td>
+                                    <button class="action-btn" title="Editar"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn" title="Excluir"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                             <tr>
+                                <td>Thyago</td>
+                                <td>carlos@gymp2.com</td>
+                                <td><span class="status admin-level">Admin</span></td>
+                                <td>27/10/2025 10:15</td>
+                                <td><span class="status active">Ativo</span></td>
+                                <td>
+                                    <button class="action-btn" title="Editar"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn" title="Excluir"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                             <tr>
+                                <td>Juan</td>
+                                <td>carlos@gymp2.com</td>
+                                <td><span class="status admin-level">Admin</span></td>
+                                <td>27/10/2025 10:15</td>
+                                <td><span class="status active">Ativo</span></td>
+                                <td>
+                                    <button class="action-btn" title="Editar"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn" title="Excluir"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Daniel</td>
+                                <td>ana@gymp2.com</td>
+                                <td><span class="status admin-level">Admin</span></td>
+                                <td>26/10/2025 18:45</td>
+                                <td><span class="status active">Ativo</span></td>
+                                <td>
+                                    <button class="action-btn" title="Editar"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn" title="Excluir"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Nova/Editar Academia -->
+    <div id="modalAcademia" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-building"></i> <span id="modalTitle">Cadastrar Nova Academia</span></h3>
+                <span class="close-btn">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="formAcademia">
+                    <input type="hidden" id="academyId">
+                    
+                    <div class="form-group">
+                        <div class="photo-upload-container">
+                            <div class="photo-preview" id="photoPreview">
+                                <i class="fas fa-camera"></i>
+                                <img id="previewImage" src="" alt="Preview">
+                            </div>
+                            <div>
+                                <label for="gymPhoto">Foto da Academia</label>
+                                <p style="color: var(--primary-gray-light); margin-bottom: 10px;">Envie uma foto da fachada ou logotipo da academia</p>
+                                <button type="button" class="upload-btn" id="uploadPhotoBtn">
+                                    <i class="fas fa-upload"></i> Escolher Foto
+                                </button>
+                                <input type="file" id="gymPhoto" accept="image/*" style="display: none;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="gymName">Nome da Academia *</label>
+                            <input type="text" id="gymName" placeholder="Ex: Academia Fitness Plus" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="gymCNPJ">CNPJ *</label>
+                            <input type="text" id="gymCNPJ" placeholder="00.000.000/0000-00" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="gymEmail">E-mail</label>
+                            <input type="email" id="gymEmail" placeholder="contato@academia.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="gymPhone">Telefone</label>
+                            <input type="tel" id="gymPhone" placeholder="(11) 99999-9999">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gymType">Tipo de Academia *</label>
+                        <div class="type-selector">
+                            <div class="type-option" data-type="musculacao">
+                                <i class="fas fa-dumbbell"></i>
+                                <span>Musculação</span>
+                            </div>
+                            <div class="type-option" data-type="artes-marciais">
+                                <i class="fas fa-user-ninja"></i>
+                                <span>Artes Marciais</span>
+                            </div>
+                        </div>
+                        <input type="hidden" id="gymType" value="musculacao" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gymAddress">Endereço Completo *</label>
+                        <input type="text" id="gymAddress" placeholder="Rua, Número, Bairro, Cidade - Estado" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="gymCity">Cidade</label>
+                            <input type="text" id="gymCity" placeholder="São Paulo">
+                        </div>
+                        <div class="form-group">
+                            <label for="gymState">Estado</label>
+                            <select id="gymState">
+                                <option value="">Selecione</option>
+                                <option value="AC">Acre</option>
+                                <option value="AL">Alagoas</option>
+                                <option value="AP">Amapá</option>
+                                <option value="AM">Amazonas</option>
+                                <option value="BA">Bahia</option>
+                                <option value="CE">Ceará</option>
+                                <option value="DF">Distrito Federal</option>
+                                <option value="ES">Espírito Santo</option>
+                                <option value="GO">Goiás</option>
+                                <option value="MA">Maranhão</option>
+                                <option value="MT">Mato Grosso</option>
+                                <option value="MS">Mato Grosso do Sul</option>
+                                <option value="MG">Minas Gerais</option>
+                                <option value="PA">Pará</option>
+                                <option value="PB">Paraíba</option>
+                                <option value="PR">Paraná</option>
+                                <option value="PE">Pernambuco</option>
+                                <option value="PI">Piauí</option>
+                                <option value="RJ">Rio de Janeiro</option>
+                                <option value="RN">Rio Grande do Norte</option>
+                                <option value="RS">Rio Grande do Sul</option>
+                                <option value="RO">Rondônia</option>
+                                <option value="RR">Roraima</option>
+                                <option value="SC">Santa Catarina</option>
+                                <option value="SP">São Paulo</option>
+                                <option value="SE">Sergipe</option>
+                                <option value="TO">Tocantins</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gymPrice">Preço da Mensalidade *</label>
+                        <div class="price-input-container">
+                            <span class="price-symbol">R$</span>
+                            <input type="number" id="gymPrice" placeholder="0.00" min="0" step="5" value="60" required>
+                        </div>
+                        <p style="margin-top: 5px; color: var(--primary-gray-light); font-size: 0.9rem;">
+                            Preço mensal que será exibido na página pública
+                        </p>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gymOwner">Proprietário *</label>
+                        <select id="gymOwner" required>
+                            <option value="">Selecione um proprietário</option>
+                            <option value="João Silva">João Silva</option>
+                            <option value="Maria Santos">Maria Santos</option>
+                            <option value="Pedro Oliveira">Pedro Oliveira</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gymDescription">Descrição</label>
+                        <textarea id="gymDescription" placeholder="Descreva as instalações, equipamentos e serviços oferecidos pela academia..." rows="3"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Facilidades</label>
+                        <div class="facilities-selector">
+                            <div class="facility-option" data-facility="estacionamento">
+                                <i class="fas fa-parking"></i>
+                                <span>Estacionamento</span>
+                            </div>
+                            <div class="facility-option" data-facility="ar-condicionado">
+                                <i class="fas fa-snowflake"></i>
+                                <span>Ar Condicionado</span>
+                            </div>
+                            <div class="facility-option" data-facility="vestiario">
+                                <i class="fas fa-shower"></i>
+                                <span>Vestiário</span>
+                            </div>
+                            <div class="facility-option" data-facility="wifi">
+                                <i class="fas fa-wifi"></i>
+                                <span>Wi-Fi</span>
+                            </div>
+                            <div class="facility-option" data-facility="personais">
+                                <i class="fas fa-dumbbell"></i>
+                                <span>Personais</span>
+                            </div>
+                            <div class="facility-option" data-facility="piscina">
+                                <i class="fas fa-swimming-pool"></i>
+                                <span>Piscina</span>
+                            </div>
+                        </div>
+                        <input type="hidden" id="gymFacilities" value="">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="gymOpening">Horário de Abertura</label>
+                            <input type="time" id="gymOpening" value="06:00">
+                        </div>
+                        <div class="form-group">
+                            <label for="gymClosing">Horário de Fechamento</label>
+                            <input type="time" id="gymClosing" value="22:00">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gymStatus">Status</label>
+                        <select id="gymStatus">
+                            <option value="active">Ativo</option>
+                            <option value="inactive">Inativo</option>
+                            <option value="pending">Pendente</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="btnCancelar">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="btnSalvarAcademia">Salvar Academia</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Ver Detalhes -->
+    <div id="modalDetalhes" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-info-circle"></i> Detalhes da Academia</h3>
+                <span class="close-btn">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="detailsContent">
+                    <!-- Detalhes serão carregados aqui -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="btnFecharDetalhes">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // ============================================
+    // FUNÇÕES GLOBAIS
+    // ============================================
+    
+    // Função para salvar academia no localStorage
+    function saveAcademyToStorage(academyData) {
+        let academies = JSON.parse(localStorage.getItem('gymAcademies')) || [];
+        
+        // Verificar se é edição ou nova
+        const existingIndex = academies.findIndex(a => a.id === academyData.id);
+        if (existingIndex !== -1) {
+            // Atualizar existente
+            academies[existingIndex] = academyData;
+        } else {
+            // Adicionar nova
+            academies.push(academyData);
+        }
+        
+        localStorage.setItem('gymAcademies', JSON.stringify(academies));
+        return academyData;
+    }
+    
+    // Função para remover academia do localStorage
+    function removeAcademyFromStorage(academyId) {
+        let academies = JSON.parse(localStorage.getItem('gymAcademies')) || [];
+        academies = academies.filter(academy => academy.id !== academyId);
+        localStorage.setItem('gymAcademies', JSON.stringify(academies));
+    }
+    
+    // Função para obter academia por ID
+    function getAcademyById(academyId) {
+        const academies = JSON.parse(localStorage.getItem('gymAcademies')) || [];
+        return academies.find(a => a.id === academyId);
+    }
+    
+    // Função para determinar localização
+    function determineLocation(address) {
+        if (address.includes('Praça') || address.includes('Matriz')) return 'praca-matriz';
+        if (address.includes('Vila') || address.includes('Kolping')) return 'vila-kolping';
+        if (address.includes('Chapada') || address.includes('Serra')) return 'chapada-serra';
+        return 'centro';
+    }
+    
+    // Função para imagem padrão
+    function getDefaultGymImage(type) {
+        const images = {
+            'musculacao': 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400&h=250&fit=crop&q=80',
+            'artes-marciais': 'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=400&h=250&fit=crop&q=80'
+        };
+        return images[type] || images.musculacao;
+    }
+    
+    // Função para mostrar alerta
+    function showAlert(message, type = 'success') {
+        const alertContainer = document.getElementById('alertContainer');
+        const alertId = 'alert-' + Date.now();
+        
+        const alertDiv = document.createElement('div');
+        alertDiv.className = `alert alert-${type}`;
+        alertDiv.id = alertId;
+        alertDiv.innerHTML = `
+            <div>${message}</div>
+            <button class="alert-close" onclick="document.getElementById('${alertId}').remove()">
+                <i class="fas fa-times"></i>
+            </button>
+        `;
+        
+        alertContainer.appendChild(alertDiv);
+        
+        // Auto-remove após 5 segundos
+        setTimeout(() => {
+            if (document.getElementById(alertId)) {
+                document.getElementById(alertId).remove();
+            }
+        }, 5000);
+    }
+    
+    // ============================================
+    // CÓDIGO PRINCIPAL
+    // ============================================
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        // Elementos principais
+        const modal = document.getElementById('modalAcademia');
+        const modalDetalhes = document.getElementById('modalDetalhes');
+        const btnNovaAcademia = document.getElementById('btnNovaAcademia');
+        const closeBtns = document.querySelectorAll('.close-btn, #btnCancelar, #btnFecharDetalhes');
+        const btnSalvarAcademia = document.getElementById('btnSalvarAcademia');
+        const uploadPhotoBtn = document.getElementById('uploadPhotoBtn');
+        const gymPhotoInput = document.getElementById('gymPhoto');
+        const previewImage = document.getElementById('previewImage');
+        const photoPreview = document.getElementById('photoPreview');
+        const formAcademia = document.getElementById('formAcademia');
+        const modalTitle = document.getElementById('modalTitle');
+        
+        // Elementos da tabela
+        const academiasTbody = document.querySelector('#academias-section tbody');
+        const gymCardValue = document.querySelector('.card[data-tab="academias"] .card-value');
+        
+        // Elementos dos campos
+        const gymPrice = document.getElementById('gymPrice');
+        const gymTypeInput = document.getElementById('gymType');
+        const typeOptions = document.querySelectorAll('.type-option');
+        const facilityOptions = document.querySelectorAll('.facility-option');
+        const gymFacilitiesInput = document.getElementById('gymFacilities');
+        const academyIdInput = document.getElementById('academyId');
+        
+        // Variável para controlar modo de edição
+        let editingAcademyId = null;
+        
+        // ============================================
+        // FUNÇÕES AUXILIARES
+        // ============================================
+        
+        // Abrir modal para nova academia
+        function openNewAcademyModal() {
+            editingAcademyId = null;
+            modalTitle.textContent = 'Cadastrar Nova Academia';
+            btnSalvarAcademia.textContent = 'Salvar Academia';
+            formAcademia.reset();
+            previewImage.style.display = 'none';
+            photoPreview.querySelector('i').style.display = 'block';
+            resetTypeSelector();
+            resetFacilitiesSelector();
+            modal.style.display = 'block';
+        }
+        
+        // Abrir modal para editar academia
+        function openEditAcademyModal(academyId) {
+            const academy = getAcademyById(academyId);
+            if (!academy) {
+                showAlert('Academia não encontrada!', 'error');
+                return;
+            }
+            
+            editingAcademyId = academyId;
+            modalTitle.textContent = 'Editar Academia';
+            btnSalvarAcademia.textContent = 'Atualizar Academia';
+            
+            // Preencher formulário com dados existentes
+            document.getElementById('gymName').value = academy.name;
+            document.getElementById('gymCNPJ').value = academy.cnpj || '';
+            document.getElementById('gymEmail').value = academy.email || '';
+            document.getElementById('gymPhone').value = academy.phone || '';
+            document.getElementById('gymAddress').value = academy.address || '';
+            document.getElementById('gymCity').value = academy.city || '';
+            document.getElementById('gymState').value = academy.state || '';
+            document.getElementById('gymPrice').value = academy.price || '60';
+            document.getElementById('gymOwner').value = academy.owner || '';
+            document.getElementById('gymDescription').value = academy.description || '';
+            document.getElementById('gymStatus').value = academy.status || 'active';
+            
+            // Definir tipo
+            setTypeSelector(academy.type || 'musculacao');
+            
+            // Definir facilidades
+            setFacilitiesSelector(academy.facilities || []);
+            
+            // Definir horários
+            if (academy.schedule) {
+                const scheduleParts = academy.schedule.weekdays?.split(' - ') || ['06:00', '22:00'];
+                document.getElementById('gymOpening').value = scheduleParts[0] || '06:00';
+                document.getElementById('gymClosing').value = scheduleParts[1] || '22:00';
+            }
+            
+            // Definir imagem
+            if (academy.image && academy.image !== '') {
+                previewImage.src = academy.image;
+                previewImage.style.display = 'block';
+                photoPreview.querySelector('i').style.display = 'none';
+            } else {
+                previewImage.style.display = 'none';
+                photoPreview.querySelector('i').style.display = 'block';
+            }
+            
+            // Definir ID
+            academyIdInput.value = academyId;
+            
+            modal.style.display = 'block';
+        }
+        
+        // Abrir modal de detalhes
+        function openDetailsModal(academyId) {
+            const academy = getAcademyById(academyId);
+            if (!academy) {
+                showAlert('Academia não encontrada!', 'error');
+                return;
+            }
+            
+            // Mapear status para português
+            const statusMap = {
+                'active': 'Ativo',
+                'inactive': 'Inativo',
+                'pending': 'Pendente'
+            };
+            
+            // Mapear tipo para português
+            const typeMap = {
+                'musculacao': 'Musculação',
+                'artes-marciais': 'Artes Marciais'
+            };
+            
+            // Mapear facilidades para ícones
+            const facilityIcons = {
+                'estacionamento': 'fas fa-parking',
+                'ar-condicionado': 'fas fa-snowflake',
+                'vestiario': 'fas fa-shower',
+                'wifi': 'fas fa-wifi',
+                'personais': 'fas fa-dumbbell',
+                'piscina': 'fas fa-swimming-pool'
+            };
+            
+            // Mapear facilidades para nomes em português
+            const facilityNames = {
+                'estacionamento': 'Estacionamento',
+                'ar-condicionado': 'Ar Condicionado',
+                'vestiario': 'Vestiário',
+                'wifi': 'Wi-Fi',
+                'personais': 'Personais',
+                'piscina': 'Piscina'
+            };
+            
+            const detailsContent = document.getElementById('detailsContent');
+            detailsContent.innerHTML = `
+                <img src="${academy.image || getDefaultGymImage(academy.type)}" class="gym-details-photo" alt="${academy.name}">
+                
+                <div class="details-grid">
+                    <div class="details-item">
+                        <div class="details-label">Nome</div>
+                        <div class="details-value">${academy.name}</div>
+                    </div>
+                    <div class="details-item">
+                        <div class="details-label">Tipo</div>
+                        <div class="details-value">${typeMap[academy.type] || 'Musculação'}</div>
+                    </div>
+                    <div class="details-item">
+                        <div class="details-label">CNPJ</div>
+                        <div class="details-value">${academy.cnpj || 'Não informado'}</div>
+                    </div>
+                    <div class="details-item">
+                        <div class="details-label">Proprietário</div>
+                        <div class="details-value">${academy.owner || 'Não informado'}</div>
+                    </div>
+                    <div class="details-item">
+                        <div class="details-label">Endereço</div>
+                        <div class="details-value">${academy.address || 'Não informado'}</div>
+                    </div>
+                    <div class="details-item">
+                        <div class="details-label">Cidade/Estado</div>
+                        <div class="details-value">${academy.city || ''} ${academy.state ? '/' + academy.state : ''}</div>
+                    </div>
+                    <div class="details-item">
+                        <div class="details-label">Preço Mensal</div>
+                        <div class="details-value" style="color: var(--primary-green); font-weight: bold;">R$ ${academy.price || '60'}/mês</div>
+                    </div>
+                    <div class="details-item">
+                        <div class="details-label">Status</div>
+                        <div class="details-value">
+                            <span class="status ${academy.status === 'active' ? 'active' : academy.status === 'inactive' ? 'inactive' : 'pending'}">
+                                ${statusMap[academy.status] || 'Ativo'}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="details-item">
+                    <div class="details-label">Contato</div>
+                    <div class="details-value">
+                        ${academy.email ? `<div><i class="fas fa-envelope"></i> ${academy.email}</div>` : ''}
+                        ${academy.phone ? `<div style="margin-top: 5px;"><i class="fas fa-phone"></i> ${academy.phone}</div>` : ''}
+                    </div>
+                </div>
+                
+                ${academy.facilities && academy.facilities.length > 0 ? `
+                <div class="details-item">
+                    <div class="details-label">Facilidades</div>
+                    <div class="details-facilities">
+                        ${academy.facilities.map(facility => `
+                            <div class="facility-badge">
+                                <i class="${facilityIcons[facility] || 'fas fa-check'}"></i>
+                                ${facilityNames[facility] || facility}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                ` : ''}
+                
+                ${academy.schedule ? `
+                <div class="details-item">
+                    <div class="details-label">Horário de Funcionamento</div>
+                    <div class="details-value">
+                        <div><strong>Dias de semana:</strong> ${academy.schedule.weekdays || '06:00 - 22:00'}</div>
+                        <div><strong>Final de semana:</strong> ${academy.schedule.weekend || '08:00 - 17:00'}</div>
+                    </div>
+                </div>
+                ` : ''}
+                
+                ${academy.description ? `
+                <div class="details-item">
+                    <div class="details-label">Descrição</div>
+                    <div class="details-value">${academy.description}</div>
+                </div>
+                ` : ''}
+                
+                <div class="details-item">
+                    <div class="details-label">Data de Cadastro</div>
+                    <div class="details-value">${new Date(academy.createdAt).toLocaleDateString('pt-BR')}</div>
+                </div>
+            `;
+            
+            modalDetalhes.style.display = 'block';
+        }
+        
+        // Funções para gerenciar seletores
+        function resetTypeSelector() {
+            typeOptions.forEach(option => {
+                option.classList.remove('selected');
+                if (option.getAttribute('data-type') === 'musculacao') {
+                    option.classList.add('selected');
+                }
+            });
+            gymTypeInput.value = 'musculacao';
+        }
+        
+        function setTypeSelector(type) {
+            typeOptions.forEach(option => {
+                option.classList.remove('selected');
+                if (option.getAttribute('data-type') === type) {
+                    option.classList.add('selected');
+                }
+            });
+            gymTypeInput.value = type;
+        }
+        
+        function resetFacilitiesSelector() {
+            facilityOptions.forEach(option => {
+                option.classList.remove('selected');
+            });
+            gymFacilitiesInput.value = '';
+        }
+        
+        function setFacilitiesSelector(facilities) {
+            facilityOptions.forEach(option => {
+                const facility = option.getAttribute('data-facility');
+                option.classList.toggle('selected', facilities.includes(facility));
+            });
+            updateFacilitiesInput();
+        }
+        
+        function updateFacilitiesInput() {
+            const selectedFacilities = [];
+            facilityOptions.forEach(option => {
+                if (option.classList.contains('selected')) {
+                    selectedFacilities.push(option.getAttribute('data-facility'));
+                }
+            });
+            gymFacilitiesInput.value = selectedFacilities.join(',');
+        }
+        
+        // Carregar academias do localStorage para a tabela
+        function loadAcademiesToTable() {
+            const academies = JSON.parse(localStorage.getItem('gymAcademies')) || [];
+            academiasTbody.innerHTML = '';
+            
+            if (academies.length > 0) {
+                academies.forEach(academy => {
+                    const statusText = academy.status === 'active' ? 'Ativo' : 
+                                     academy.status === 'inactive' ? 'Inativo' : 'Pendente';
+                    
+                    const newRow = document.createElement('tr');
+                    newRow.setAttribute('data-id', academy.id);
+                    newRow.innerHTML = `
+                        <td><img src="${academy.image || getDefaultGymImage(academy.type)}" class="gym-photo-table" alt="Academia"></td>
+                        <td>${academy.name}</td>
+                        <td>${academy.address || 'Não informado'}</td>
+                        <td><span class="price-display">R$ ${academy.price || '60'}/mês</span></td>
+                        <td>${academy.owner || 'Não informado'}</td>
+                        <td>${academy.cnpj || 'Não informado'}</td>
+                        <td><span class="status ${academy.status === 'active' ? 'active' : academy.status === 'inactive' ? 'inactive' : 'pending'}">${statusText}</span></td>
+                        <td>
+                            <button class="action-btn btn-editar" title="Editar" data-id="${academy.id}"><i class="fas fa-edit"></i></button>
+                            <button class="action-btn btn-excluir" title="Excluir" data-id="${academy.id}"><i class="fas fa-trash"></i></button>
+                        </td>
+                    `;
+                    academiasTbody.appendChild(newRow);
+                });
+                
+                // Atualizar contador
+                gymCardValue.textContent = academies.length;
+                
+                // Adicionar eventos aos botões
+                addTableButtonEvents();
+            }
+        }
+        
+        // Adicionar eventos aos botões da tabela
+        function addTableButtonEvents() {
+            // Botões de editar
+            document.querySelectorAll('.btn-editar').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const academyId = parseInt(this.getAttribute('data-id'));
+                    openEditAcademyModal(academyId);
+                });
+            });
+            
+            // Botões de excluir
+            document.querySelectorAll('.btn-excluir').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const academyId = parseInt(this.getAttribute('data-id'));
+                    const academy = getAcademyById(academyId);
+                    
+                    if (academy && confirm(`Tem certeza que deseja excluir a academia "${academy.name}"?`)) {
+                        // Remover da tabela
+                        const row = this.closest('tr');
+                        row.remove();
+                        
+                        // Remover do localStorage
+                        removeAcademyFromStorage(academyId);
+                        
+                        // Atualizar contador
+                        const academies = JSON.parse(localStorage.getItem('gymAcademies')) || [];
+                        gymCardValue.textContent = academies.length;
+                        
+                        showAlert('Academia excluída com sucesso!', 'success');
+                    }
+                });
+            });
+        }
+        
+        // ============================================
+        // EVENT LISTENERS
+        // ============================================
+        
+        // Abrir modal para nova academia
+        btnNovaAcademia.addEventListener('click', openNewAcademyModal);
+        
+        // Fechar modais
+        closeBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                modal.style.display = 'none';
+                modalDetalhes.style.display = 'none';
+                formAcademia.reset();
+                previewImage.style.display = 'none';
+                photoPreview.querySelector('i').style.display = 'block';
+                resetTypeSelector();
+                resetFacilitiesSelector();
+                editingAcademyId = null;
+            });
+        });
+        
+        // Fechar modal ao clicar fora
+        window.addEventListener('click', function(event) {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+                formAcademia.reset();
+                previewImage.style.display = 'none';
+                photoPreview.querySelector('i').style.display = 'block';
+                resetTypeSelector();
+                resetFacilitiesSelector();
+                editingAcademyId = null;
+            }
+            if (event.target === modalDetalhes) {
+                modalDetalhes.style.display = 'none';
+            }
+        });
+        
+        // Upload de foto
+        uploadPhotoBtn.addEventListener('click', function() {
+            gymPhotoInput.click();
+        });
+        
+        gymPhotoInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImage.src = e.target.result;
+                    previewImage.style.display = 'block';
+                    photoPreview.querySelector('i').style.display = 'none';
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        // Seleção de tipo
+        typeOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                typeOptions.forEach(opt => opt.classList.remove('selected'));
+                this.classList.add('selected');
+                gymTypeInput.value = this.getAttribute('data-type');
+            });
+        });
+        
+        // Seleção de facilidades
+        facilityOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                this.classList.toggle('selected');
+                updateFacilitiesInput();
+            });
+        });
+        
+        // Salvar/Atualizar academia
+        btnSalvarAcademia.addEventListener('click', function() {
+            // Validação básica
+            const gymName = document.getElementById('gymName').value;
+            const gymCNPJ = document.getElementById('gymCNPJ').value;
+            const gymAddress = document.getElementById('gymAddress').value;
+            const gymOwner = document.getElementById('gymOwner');
+            const selectedOwner = gymOwner.options[gymOwner.selectedIndex].value;
+            const gymEmail = document.getElementById('gymEmail').value;
+            const gymPhone = document.getElementById('gymPhone').value;
+            const gymDescription = document.getElementById('gymDescription').value;
+            const gymStatus = document.getElementById('gymStatus').value;
+            const gymType = gymTypeInput.value;
+            const gymPriceValue = gymPrice.value;
+            const gymFacilities = gymFacilitiesInput.value.split(',').filter(f => f);
+            
+            if (!gymName || !gymCNPJ || !gymAddress || !selectedOwner || !gymPriceValue) {
+                showAlert('Por favor, preencha todos os campos obrigatórios (*)', 'error');
+                return;
+            }
+            
+            // Gerar URL da foto
+            let photoUrl = previewImage.src || getDefaultGymImage(gymType);
+            
+            // Criar objeto com dados
+            const academyData = {
+                id: editingAcademyId || Date.now(),
+                name: gymName,
+                address: gymAddress,
+                type: gymType,
+                price: gymPriceValue,
+                status: gymStatus,
+                image: photoUrl,
+                owner: selectedOwner,
+                cnpj: gymCNPJ,
+                email: gymEmail,
+                phone: gymPhone,
+                city: document.getElementById('gymCity').value,
+                state: document.getElementById('gymState').value,
+                description: gymDescription,
+                schedule: {
+                    weekdays: document.getElementById('gymOpening').value + ' - ' + document.getElementById('gymClosing').value,
+                    weekend: '8h - 17h'
+                },
+                facilities: gymFacilities,
+                location: determineLocation(gymAddress),
+                createdAt: editingAcademyId ? getAcademyById(editingAcademyId)?.createdAt || new Date().toISOString() : new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            };
+            
+            // Salvar no localStorage
+            saveAcademyToStorage(academyData);
+            
+            // Recarregar tabela
+            loadAcademiesToTable();
+            
+            // Fechar modal
+            modal.style.display = 'none';
+            formAcademia.reset();
+            previewImage.style.display = 'none';
+            photoPreview.querySelector('i').style.display = 'block';
+            resetTypeSelector();
+            resetFacilitiesSelector();
+            editingAcademyId = null;
+            
+            // Mostrar mensagem
+            const message = editingAcademyId ? 'Academia atualizada com sucesso!' : 'Academia cadastrada com sucesso!';
+            showAlert(message, 'success');
+        });
+        
+        // ============================================
+        // NAVEGAÇÃO ENTRO TABS
+        // ============================================
+        
+        // Tab navigation functionality
+        const navLinks = document.querySelectorAll('.nav-links li');
+        const cards = document.querySelectorAll('.dashboard-cards .card');
+        const sections = document.querySelectorAll('.section');
+        
+        function showSection(sectionId) {
+            sections.forEach(section => {
+                if (section.id === sectionId + '-section') {
+                    section.style.display = 'block';
+                } else {
+                    section.style.display = 'none';
+                }
+            });
+            
+            // Update active nav link
+            navLinks.forEach(link => {
+                if (link.getAttribute('data-tab') === sectionId) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+        }
+        
+        // Add click event to nav links
+        navLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                const tab = this.getAttribute('data-tab');
+                if (tab) {
+                    showSection(tab);
+                }
+            });
+        });
+        
+        // Add click event to cards
+        cards.forEach(card => {
+            card.addEventListener('click', function() {
+                const tab = this.getAttribute('data-tab');
+                if (tab) {
+                    showSection(tab);
+                }
+            });
+        });
+        
+        // ============================================
+        // FUNCIONALIDADE DE BUSCA
+        // ============================================
+        
+        const searchInput = document.getElementById('searchInput');
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const activeSection = document.querySelector('.section[style="display: block;"]');
+            
+            if (activeSection) {
+                const rows = activeSection.querySelectorAll('tbody tr');
+                rows.forEach(row => {
+                    const text = row.textContent.toLowerCase();
+                    if (text.includes(searchTerm)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            }
+        });
+        
+        // ============================================
+        // FORMATAÇÃO DE CAMPOS
+        // ============================================
+        
+        // Format CNPJ input
+        document.getElementById('gymCNPJ').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            
+            if (value.length <= 14) {
+                value = value.replace(/^(\d{2})(\d)/, '$1.$2');
+                value = value.replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3');
+                value = value.replace(/\.(\d{3})(\d)/, '.$1/$2');
+                value = value.replace(/(\d{4})(\d)/, '$1-$2');
+                e.target.value = value;
+            }
+        });
+        
+        // Format phone input
+        document.getElementById('gymPhone').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            
+            if (value.length <= 11) {
+                if (value.length <= 10) {
+                    value = value.replace(/^(\d{2})(\d)/, '($1) $2');
+                    value = value.replace(/(\d{4})(\d)/, '$1-$2');
+                } else {
+                    value = value.replace(/^(\d{2})(\d)/, '($1) $2');
+                    value = value.replace(/(\d{5})(\d)/, '$1-$2');
+                }
+                e.target.value = value;
+            }
+        });
+        
+        // Format price input
+        document.getElementById('gymPrice').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value === '') value = '0';
+            e.target.value = value;
+        });
+        
+        // ============================================
+        // INICIALIZAÇÃO
+        // ============================================
+        
+        // Mostrar seção de academias por padrão
+        showSection('academias');
+        
+        // Carregar academias existentes
+        loadAcademiesToTable();
+        
+        // Inicializar selectores
+        resetTypeSelector();
+        resetFacilitiesSelector();
+        
+        // Adicionar dados iniciais se não existirem
+        setTimeout(() => {
+            const academies = JSON.parse(localStorage.getItem('gymAcademies')) || [];
+            if (academies.length === 0) {
+                // Adicionar alguns dados de exemplo
+                const exampleAcademies = [
+                    {
+                        id: 1,
+                        name: 'Academia Fitness Plus',
+                        address: 'Rua das Flores, 123 - Centro, São Paulo - SP',
+                        type: 'musculacao',
+                        price: '89.90',
+                        status: 'active',
+                        image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400&h=250&fit=crop&q=80',
+                        owner: 'João Silva',
+                        cnpj: '12.345.678/0001-90',
+                        email: 'contato@fitnessplus.com',
+                        phone: '(11) 98765-4321',
+                        city: 'São Paulo',
+                        state: 'SP',
+                        description: 'Academia completa com equipamentos modernos e pessoal qualificado.',
+                        schedule: {
+                            weekdays: '06:00 - 22:00',
+                            weekend: '08:00 - 17:00'
+                        },
+                        facilities: ['estacionamento', 'ar-condicionado', 'vestiario', 'wifi', 'personais'],
+                        location: 'centro',
+                        createdAt: '2024-01-15T10:00:00.000Z'
+                    },
+                    {
+                        id: 2,
+                        name: 'Power Gym',
+                        address: 'Avenida Principal, 456 - Vila, Rio de Janeiro - RJ',
+                        type: 'musculacao',
+                        price: '75.00',
+                        status: 'active',
+                        image: 'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=400&h=250&fit=crop&q=80',
+                        owner: 'Maria Santos',
+                        cnpj: '98.765.432/0001-10',
+                        email: 'contato@powergym.com',
+                        phone: '(21) 97654-3210',
+                        city: 'Rio de Janeiro',
+                        state: 'RJ',
+                        description: 'Academia focada em musculação e crossfit.',
+                        schedule: {
+                            weekdays: '05:00 - 23:00',
+                            weekend: '07:00 - 19:00'
+                        },
+                        facilities: ['estacionamento', 'vestiario', 'personais'],
+                        location: 'vila-kolping',
+                        createdAt: '2024-02-20T14:30:00.000Z'
+                    },
+                    {
+                        id: 3,
+                        name: 'Strong Academy',
+                        address: 'Praça Central, 789 - Chapada, Belo Horizonte - MG',
+                        type: 'artes-marciais',
+                        price: '120.00',
+                        status: 'pending',
+                        image: 'https://images.unsplash.com/photo-1549060279-7e168fce7090?w=400&h=250&fit=crop&q=80',
+                        owner: 'Pedro Oliveira',
+                        cnpj: '45.678.912/0001-30',
+                        email: 'contato@strongacademy.com',
+                        phone: '(31) 96543-2109',
+                        city: 'Belo Horizonte',
+                        state: 'MG',
+                        description: 'Academia especializada em artes marciais e defesa pessoal.',
+                        schedule: {
+                            weekdays: '07:00 - 21:00',
+                            weekend: '09:00 - 16:00'
+                        },
+                        facilities: ['ar-condicionado', 'vestiario', 'piscina'],
+                        location: 'chapada-serra',
+                        createdAt: '2024-03-10T09:15:00.000Z'
+                    }
+                ];
+                
+                localStorage.setItem('gymAcademies', JSON.stringify(exampleAcademies));
+                loadAcademiesToTable();
+            }
+        }, 100);
+    });
+    </script>
+</body>
+</html>
