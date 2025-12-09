@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Login Gymp2</title>
+  <title>Login Gymp2 - Sistema Seguro</title>
   <style>
     * {
       box-sizing: border-box;
@@ -270,6 +269,7 @@
       background: rgba(0, 255, 127, 0.05);
       color: var(--muted);
       transition: 0.2s;
+      flex-shrink: 0;
     }
 
     .show-pass:hover {
@@ -304,9 +304,14 @@
       transition: 0.2s;
     }
 
-    .submit:hover {
+    .submit:hover:not(:disabled) {
       background: linear-gradient(90deg, var(--accent), #66ffb2);
       box-shadow: 0 0 15px rgba(0, 255, 127, 0.4);
+    }
+
+    .submit:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
     }
 
     .small {
@@ -334,6 +339,17 @@
       background: rgba(255, 0, 0, 0.1);
       color: #ff6b6b;
       border: 1px solid rgba(255, 0, 0, 0.2);
+    }
+
+    .loading {
+      display: none;
+      text-align: center;
+      color: var(--accent);
+      margin: 10px 0;
+    }
+
+    .loading.active {
+      display: block;
     }
 
     @media (max-width: 960px) {
@@ -383,77 +399,23 @@
         font-size: 11px;
       }
     }
-
-    @media (max-width: 480px) {
-      body {
-        padding: 16px;
-      }
-
-      .slider-area {
-        height: 240px;
-      }
-
-      .slide {
-        padding: 16px;
-      }
-
-      .slide-caption {
-        padding: 16px;
-      }
-
-      .slide-caption h2 {
-        font-size: 20px;
-      }
-
-      .form-actions {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 8px;
-      }
-
-      .remember {
-        justify-content: center;
-      }
-
-      .submit {
-        width: 100%;
-      }
-
-      .toggle-btns button {
-        padding: 6px 8px;
-        font-size: 10px;
-      }
-    }
   </style>
 </head>
-
 <body>
   <canvas id="bgCanvas"></canvas>
 
-  <div class="login-container" id="login-page">
+  <div class="login-container">
     <div class="container">
       <section class="slider-area">
         <div class="slider">
-          <div class="slide active"
-            style="background-image: url('https://images.unsplash.com/photo-1558611848-73f7eb4001a1?auto=format&fit=crop&w=1200&q=80')">
-            <div class="slide-caption">
-              <h2>Bem-vindo</h2>
-              <p>Experimente um site seguro e moderno.</p>
-            </div>
+          <div class="slide active" style="background-image: url('https://images.unsplash.com/photo-1558611848-73f7eb4001a1?auto=format&fit=crop&w=1200&q=80')">
+            
           </div>
-          <div class="slide"
-            style="background-image: url('https://www.pontotel.com.br/local/wp-content/uploads/2021/12/auxilio-academia.webp')">
-            <div class="slide-caption">
-              <h2>Crie sua conta</h2>
-              <p>Rápido, seguro e com estilo.</p>
-            </div>
+          <div class="slide" style="background-image: url('https://www.pontotel.com.br/local/wp-content/uploads/2021/12/auxilio-academia.webp')">
+            
           </div>
-          <div class="slide"
-            style="background-image: url('https://images.unsplash.com/photo-1605296867304-46d5465a13f1?auto=format&fit=crop&w=1200&q=80')">
-            <div class="slide-caption">
-              <h2>Faça login</h2>
-              <p>Volte para treinar no seu ritmo.</p>
-            </div>
+          <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1605296867304-46d5465a13f1?auto=format&fit=crop&w=1200&q=80')">
+            
           </div>
         </div>
         <div class="slider-controls">
@@ -476,60 +438,63 @@
           <div class="forms">
             <form id="login-form" class="form active">
               <div id="login-message"></div>
+              <div id="login-loading" class="loading">⏳ Autenticando...</div>
               <label>
                 <span>Email</span>
-                <input type="email" placeholder="seu@exemplo.com" required id="login-email" />
+                <input type="email" placeholder="seu@exemplo.com" required id="login-email" autocomplete="email" />
               </label>
               <label>
                 <span>Senha</span>
                 <div class="password-field">
-                  <input type="password" placeholder="••••••••" required id="login-password" />
-                  <button type="button" class="show-pass" data-target="login-password">👁️</button>
+                  <input type="password" placeholder="••••••••" required id="login-password" autocomplete="current-password" />
+                  <button type="button" class="show-pass" data-target="login-password">👁</button>
                 </div>
               </label>
               <div class="form-actions">
                 <label class="remember">
                   <input type="checkbox" id="remember-me" /> Lembrar-me
                 </label>
-                <button type="submit" class="submit">Entrar</button>
+                <button type="submit" class="submit" id="btn-submit-login">Entrar</button>
               </div>
             </form>
 
             <form id="signup-form" class="form">
               <div id="signup-message"></div>
+              <div id="signup-loading" class="loading">⏳ Criando conta...</div>
               <label>
                 <span>Nome</span>
-                <input type="text" placeholder="Seu nome" required id="signup-name" />
+                <input type="text" placeholder="Seu nome completo" required id="signup-name" autocomplete="name" />
               </label>
               <label>
                 <span>Email</span>
-                <input type="email" placeholder="seu@exemplo.com" required id="signup-email" />
+                <input type="email" placeholder="seu@exemplo.com" required id="signup-email" autocomplete="email" />
               </label>
               <label>
-                <span>Senha</span>
+                <span>Senha (mínimo 6 caracteres)</span>
                 <div class="password-field">
-                  <input type="password" placeholder="••••••••" required id="signup-password" />
-                  <button type="button" class="show-pass" data-target="signup-password">👁️</button>
+                  <input type="password" placeholder="••••••••" required id="signup-password" minlength="6" autocomplete="new-password" />
+                  <button type="button" class="show-pass" data-target="signup-password">👁</button>
                 </div>
               </label>
               <div class="form-actions">
-                <button type="submit" class="submit">Criar conta</button>
+                <button type="submit" class="submit" id="btn-submit-signup">Criar conta</button>
               </div>
             </form>
           </div>
-          <footer class="small">
-            <p>Faça seu login para utilizar o Gymp2.</p>
-          </footer>
+          
         </div>
       </section>
     </div>
   </div>
 
   <script>
+    // ============= CONFIGURAÇÃO =============
+    const API_URL = 'http://localhost:3000';
+
+    // ============= ANIMAÇÃO DE FUNDO =============
     const canvas = document.getElementById('bgCanvas');
     const ctx = canvas.getContext('2d');
     let particles = [];
-    const numParticles = 100;
 
     function resizeCanvas() {
       canvas.width = window.innerWidth;
@@ -562,7 +527,7 @@
 
     function initParticles() {
       particles = [];
-      for (let i = 0; i < numParticles; i++) {
+      for (let i = 0; i < 100; i++) {
         particles.push(new Particle());
       }
     }
@@ -577,85 +542,98 @@
     initParticles();
     animate();
 
-    class Database {
-      constructor() {
-        this.usersKey = 'gymp2_users';
-        this.currentUserKey = 'gymp2_current_user';
-        this.init();
+    // ============= API HANDLER =============
+    class SecureAPI {
+      constructor(baseURL) {
+        this.baseURL = baseURL;
       }
 
-      init() {
-        if (!localStorage.getItem(this.usersKey)) {
-          const initialUsers = {
-            'usuario@gymp2.com': {
-              name: 'João Silva',
-              email: 'usuario@gymp2.com',
-              password: '123456',
-              joined: new Date().toISOString(),
-              role: 'user'
-            }
+      async request(endpoint, data = null, method = 'POST') {
+        try {
+          const options = {
+            method,
+            headers: { 'Content-Type': 'application/json' }
           };
-          localStorage.setItem(this.usersKey, JSON.stringify(initialUsers));
+
+          if (data) {
+            options.body = JSON.stringify(data);
+          }
+
+          const response = await fetch(`${this.baseURL}${endpoint}`, options);
+          const result = await response.json();
+
+          return result;
+        } catch (error) {
+          console.error('Erro na requisição:', error);
+          return { 
+            success: false, 
+            message: 'Erro ao conectar com o servidor. Verifique se está rodando.' 
+          };
         }
       }
 
-      getUsers() {
-        return JSON.parse(localStorage.getItem(this.usersKey)) || {};
+      async cadastro(name, email, password) {
+        return await this.request('/cadastro', { name, email, password });
       }
 
-      saveUsers(users) {
-        localStorage.setItem(this.usersKey, JSON.stringify(users));
+      async login(email, password) {
+        return await this.request('/login', { email, password });
       }
 
-      getUser(email) {
-        const users = this.getUsers();
-        return users[email] || null;
+      async verificarSessao(token) {
+        return await this.request('/verificar-sessao', { token });
       }
 
-      createUser(userData) {
-        const users = this.getUsers();
-
-        if (users[userData.email]) {
-          return { success: false, message: 'Email já cadastrado' };
-        }
-
-        users[userData.email] = {
-          ...userData,
-          joined: new Date().toISOString(),
-          role: 'user'
-        };
-
-        this.saveUsers(users);
-        return { success: true, message: 'Conta criada com sucesso!' };
-      }
-
-      login(email, password) {
-        const user = this.getUser(email);
-
-        if (!user) {
-          return { success: false, message: 'Email não encontrado' };
-        }
-
-        if (user.password !== password) {
-          return { success: false, message: 'Senha incorreta' };
-        }
-
-        localStorage.setItem(this.currentUserKey, JSON.stringify(user));
-        return { success: true, message: 'Login realizado com sucesso!', user };
-      }
-
-      logout() {
-        localStorage.removeItem(this.currentUserKey);
-      }
-
-      getCurrentUser() {
-        const userData = localStorage.getItem(this.currentUserKey);
-        return userData ? JSON.parse(userData) : null;
+      async logout(token) {
+        return await this.request('/logout', { token });
       }
     }
 
-    const db = new Database();
+    const api = new SecureAPI(API_URL);
 
+    // ============= GERENCIAMENTO DE SESSÃO =============
+    class SessionManager {
+      constructor() {
+        this.tokenKey = 'gymp2_token';
+        this.userKey = 'gymp2_user';
+      }
+
+      saveSession(token, user) {
+        sessionStorage.setItem(this.tokenKey, token);
+        sessionStorage.setItem(this.userKey, JSON.stringify(user));
+      }
+
+      getToken() {
+        return sessionStorage.getItem(this.tokenKey);
+      }
+
+      getUser() {
+        const userData = sessionStorage.getItem(this.userKey);
+        return userData ? JSON.parse(userData) : null;
+      }
+
+      clearSession() {
+        sessionStorage.removeItem(this.tokenKey);
+        sessionStorage.removeItem(this.userKey);
+      }
+
+      async checkSession() {
+        const token = this.getToken();
+        if (!token) return null;
+
+        const result = await api.verificarSessao(token);
+        if (result.success) {
+          return result.user;
+        } else {
+          this.clearSession();
+          return null;
+        }
+      }
+    }
+
+    const session = new SessionManager();
+
+    // ============= UTILITÁRIOS =============
     function showMessage(elementId, message, type = 'success') {
       const element = document.getElementById(elementId);
       element.innerHTML = `<div class="message ${type}">${message}</div>`;
@@ -664,28 +642,45 @@
       }, 5000);
     }
 
-    function redirectToMainPage(user) {
-      localStorage.setItem('currentUser', JSON.stringify(user));
-      window.location.href = 'Menu-inicial-sem-logar.html';
-    }
-
-    function checkLoginStatus() {
-      const currentUser = db.getCurrentUser();
-      if (currentUser) {
-        redirectToMainPage(currentUser);
+    function showLoading(elementId, show = true) {
+      const element = document.getElementById(elementId);
+      if (show) {
+        element.classList.add('active');
+      } else {
+        element.classList.remove('active');
       }
     }
 
-    document.getElementById('login-form').addEventListener('submit', (e) => {
+    function disableButton(buttonId, disabled = true) {
+      const button = document.getElementById(buttonId);
+      button.disabled = disabled;
+    }
+
+    function redirectToMainPage(user) {
+      console.log('✅ Redirecionando usuário:', user.name);
+      // Altere para sua página principal
+      window.location.href = 'Menu-inicial-logado.html';
+    }
+
+    // ============= EVENTOS DE LOGIN =============
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      const email = document.getElementById('login-email').value;
+      const email = document.getElementById('login-email').value.trim();
       const password = document.getElementById('login-password').value;
 
-      const result = db.login(email, password);
+      disableButton('btn-submit-login', true);
+      showLoading('login-loading', true);
+
+      const result = await api.login(email, password);
+
+      showLoading('login-loading', false);
+      disableButton('btn-submit-login', false);
 
       if (result.success) {
+        session.saveSession(result.token, result.user);
         showMessage('login-message', result.message, 'success');
+        
         setTimeout(() => {
           redirectToMainPage(result.user);
         }, 1500);
@@ -694,20 +689,35 @@
       }
     });
 
-    document.getElementById('signup-form').addEventListener('submit', (e) => {
+    // ============= EVENTOS DE CADASTRO =============
+    document.getElementById('signup-form').addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      const name = document.getElementById('signup-name').value;
-      const email = document.getElementById('signup-email').value;
+      const name = document.getElementById('signup-name').value.trim();
+      const email = document.getElementById('signup-email').value.trim();
       const password = document.getElementById('signup-password').value;
 
-      const result = db.createUser({ name, email, password });
+      if (password.length < 6) {
+        showMessage('signup-message', 'Senha deve ter no mínimo 6 caracteres', 'error');
+        return;
+      }
+
+      disableButton('btn-submit-signup', true);
+      showLoading('signup-loading', true);
+
+      const result = await api.cadastro(name, email, password);
+
+      showLoading('signup-loading', false);
+      disableButton('btn-submit-signup', false);
 
       if (result.success) {
         showMessage('signup-message', result.message, 'success');
-        setTimeout(() => {
-          const loginResult = db.login(email, password);
+        
+        // Faz login automático após cadastro
+        setTimeout(async () => {
+          const loginResult = await api.login(email, password);
           if (loginResult.success) {
+            session.saveSession(loginResult.token, loginResult.user);
             redirectToMainPage(loginResult.user);
           }
         }, 2000);
@@ -716,6 +726,7 @@
       }
     });
 
+    // ============= SLIDER DE IMAGENS =============
     (function () {
       const slides = Array.from(document.querySelectorAll('.slide'));
       const dotsContainer = document.querySelector('.dots');
@@ -723,7 +734,6 @@
       const nextBtn = document.getElementById('next');
       let current = 0;
       let interval = null;
-      const INTERVAL_MS = 5000;
 
       slides.forEach((_, i) => {
         const b = document.createElement('button');
@@ -731,6 +741,7 @@
         b.addEventListener('click', () => goTo(i));
         dotsContainer.appendChild(b);
       });
+
       const dots = Array.from(dotsContainer.children);
 
       function updateSlides() {
@@ -760,7 +771,7 @@
       prevBtn.addEventListener('click', prev);
 
       function start() {
-        interval = setInterval(next, INTERVAL_MS);
+        interval = setInterval(next, 5000);
       }
 
       function stop() {
@@ -780,6 +791,7 @@
       start();
     })();
 
+    // ============= TOGGLE LOGIN/SIGNUP =============
     (function () {
       const btnLogin = document.getElementById('btn-login');
       const btnSignup = document.getElementById('btn-signup');
@@ -809,159 +821,45 @@
       if (location.hash === '#signup') showSignup();
     })();
 
+    // ============= MOSTRAR/OCULTAR SENHA =============
     document.querySelectorAll('.show-pass').forEach(btn => {
       btn.addEventListener('click', () => {
         const id = btn.getAttribute('data-target');
         const input = document.getElementById(id);
         if (!input) return;
+        
         if (input.type === 'password') {
           input.type = 'text';
           btn.textContent = '🙈';
         } else {
           input.type = 'password';
-          btn.textContent = '👁️';
+          btn.textContent = '👁';
         }
       });
     });
 
-    window.addEventListener('DOMContentLoaded', checkLoginStatus);
-
-    function logout() {
-      if (confirm('Deseja realmente sair?')) {
-        localStorage.removeItem('gymp2_current_user');
-        localStorage.removeItem('currentUser');
-        console.log('Usuário deslogado com sucesso!');
-        window.location.href = 'login-gym.html';
-      }
-    }
-
-    function logoutWithDB() {
-      if (confirm('Deseja realmente sair?')) {
-        db.logout();
-        window.location.href = 'login-gym.html';
-      }
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-      const logoutBtn = document.getElementById('btn-logout');
-      
-      if (logoutBtn) {
-        logoutBtn.addEventListener('click', function(e) {
-          e.preventDefault();
-          logout();
-        });
-      }
-      
-      checkIfLoggedIn();
-    });
-
-    function checkIfLoggedIn() {
-      const currentUser = localStorage.getItem('gymp2_current_user') || 
-                          localStorage.getItem('currentUser');
-      
-      if (!currentUser) {
-        const protectedPages = ['Menu-inicial-logado.html', 'dashboard.html', 'perfil.html'];
-        const currentPage = window.location.pathname.split('/').pop();
-        
-        if (protectedPages.includes(currentPage)) {
-          window.location.href = 'Menu-inicial-logadoS.html';
-        }
-      }
-      
-      return currentUser ? JSON.parse(currentUser) : null;
-    }
-
-    function displayUserInfo() {
-      const user = checkIfLoggedIn();
-      
+    // ============= VERIFICAÇÃO DE SESSÃO =============
+    window.addEventListener('DOMContentLoaded', async () => {
+      const user = await session.checkSession();
       if (user) {
-        console.log('Usuário logado:', user.name);
-        console.log('Email:', user.email);
-        console.log('Tipo:', user.role);
-        
-        const userNameElement = document.getElementById('user-name');
-        const userEmailElement = document.getElementById('user-email');
-        
-        if (userNameElement) userNameElement.textContent = user.name;
-        if (userEmailElement) userEmailElement.textContent = user.email;
+        console.log('✅ Sessão ativa encontrada:', user.name);
+        redirectToMainPage(user);
       }
-    }
+    });
 
-    function createLogoutButton(containerId = 'header-actions') {
-      const container = document.getElementById(containerId);
-      
-      if (container && !document.getElementById('btn-logout')) {
-        const logoutBtn = document.createElement('button');
-        logoutBtn.id = 'btn-logout';
-        logoutBtn.className = 'logout-btn';
-        logoutBtn.innerHTML = '🚪 Sair';
-        logoutBtn.onclick = logout;
-        
-        logoutBtn.style.cssText = `
-          padding: 10px 20px;
-          background: rgba(255, 0, 0, 0.2);
-          border: 2px solid rgba(255, 0, 0, 0.5);
-          border-radius: 10px;
-          color: #fff;
-          cursor: pointer;
-          font-size: 16px;
-          transition: all 0.3s ease;
-        `;
-        
-        logoutBtn.addEventListener('mouseenter', function() {
-          this.style.background = 'rgba(255, 0, 0, 0.4)';
-          this.style.transform = 'scale(1.05)';
-        });
-        
-        logoutBtn.addEventListener('mouseleave', function() {
-          this.style.background = 'rgba(255, 0, 0, 0.2)';
-          this.style.transform = 'scale(1)';
-        });
-        
-        container.appendChild(logoutBtn);
-      }
-    }
-
-    function logoutWithAnimation() {
+    // ============= FUNÇÃO DE LOGOUT (PARA OUTRAS PÁGINAS) =============
+    window.logout = async function() {
       if (confirm('Deseja realmente sair?')) {
-        document.body.style.transition = 'opacity 0.5s ease';
-        document.body.style.opacity = '0';
-        
-        setTimeout(() => {
-          localStorage.removeItem('gymp2_current_user');
-          localStorage.removeItem('currentUser');
-          window.location.href = 'login-gym.html';
-        }, 500);
+        const token = session.getToken();
+        if (token) {
+          await api.logout(token);
+        }
+        session.clearSession();
+        window.location.href = 'login-gym.html';
       }
-    }
+    };
 
-    let inactivityTimer;
-    const INACTIVITY_TIMEOUT = 30 * 60 * 1000;
-
-    function resetInactivityTimer() {
-      clearTimeout(inactivityTimer);
-      inactivityTimer = setTimeout(() => {
-        alert('Sessão expirada por inatividade.');
-        logout();
-      }, INACTIVITY_TIMEOUT);
-    }
-
-    function setupInactivityMonitoring() {
-      ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'].forEach(event => {
-        document.addEventListener(event, resetInactivityTimer, true);
-      });
-      
-      resetInactivityTimer();
-    }
-
-    window.logout = logout;
-    window.logoutWithDB = logoutWithDB;
-    window.logoutWithAnimation = logoutWithAnimation;
-    window.checkIfLoggedIn = checkIfLoggedIn;
-    window.displayUserInfo = displayUserInfo;
-    window.createLogoutButton = createLogoutButton;
+    console.log('🔒 Sistema de autenticação seguro carregado!');
   </script>
-
 </body>
-
 </html>
