@@ -3468,6 +3468,42 @@
 <!-- 3. Header com Informações do Usuário -->
 <script src="user-header.js"></script>
    <script>
+    // ========== DEBUG EM TEMPO REAL ==========
+console.log('🔍 VERIFICANDO LOGIN AO CARREGAR PÁGINA...');
+
+// 1. Verificar localStorage
+const userLocalStorage = localStorage.getItem('currentUser');
+const userGymP2 = localStorage.getItem('gymp2_current_user');
+
+console.log('📦 Dados no localStorage:');
+console.log('- currentUser:', userLocalStorage);
+console.log('- gymp2_current_user:', userGymP2);
+
+// 2. Verificar sessionStorage (usado pelo segundo código)
+const token = sessionStorage.getItem('gymp2_token');
+const userSession = sessionStorage.getItem('gymp2_user');
+
+console.log('🗝️ Dados no sessionStorage:');
+console.log('- Token:', token);
+console.log('- Usuário:', userSession);
+
+// 3. Tentar parsear
+try {
+    if (userLocalStorage) {
+        const user = JSON.parse(userLocalStorage);
+        console.log('✅ USUÁRIO ENCONTRADO (currentUser):', user.name);
+    }
+    if (userGymP2) {
+        const user = JSON.parse(userGymP2);
+        console.log('✅ USUÁRIO ENCONTRADO (gymp2_current_user):', user.name);
+    }
+    if (userSession) {
+        const user = JSON.parse(userSession);
+        console.log('✅ USUÁRIO ENCONTRADO (session):', user.name);
+    }
+} catch (e) {
+    console.error('❌ ERRO AO ANALISAR DADOS:', e);
+}
 // ========== DETECÇÃO AUTOMÁTICA DE LOGIN ==========
 (function() {
     console.log('🔍 Verificando status de login...');
