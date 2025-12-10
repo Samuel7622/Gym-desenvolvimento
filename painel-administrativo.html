@@ -886,7 +886,7 @@
                 <li data-tab="proprietarios"><a href="#"><i class="fas fa-user-tie"></i> Proprietários</a></li>
                 <li data-tab="personais"><a href="#"><i class="fas fa-dumbbell"></i> Personais</a></li>
                 <li data-tab="administradores"><a href="#"><i class="fas fa-shield-alt"></i> Administradores</a></li>
-                <li><a href="#"><i class="fas fa-cog"></i> Configurações</a></li>
+                <li><a href="config.html"><i class="fas fa-cog"></i> Configurações</a></li>
                 <li><a href="academias-publicas.html" target="_blank"><i class="fas fa-external-link-alt"></i> Ver Página Pública</a></li>
                 <li><a href="#"><i class="fas fa-sign-out-alt"></i> Sair</a></li>
             </ul>
@@ -3108,6 +3108,54 @@
         
         console.log('✅ Sistema de proprietários inicializado com sucesso!');
     });
+
+        // ============================================
+        // APLICAR TAMANHO DA FONTE
+        // ============================================
+        function applyFontSize(size) {
+            const sizes = {
+                'small': { 
+                    h1: '36px', 
+                    h2: '24px', 
+                    h3: '18px',
+                    normal: '14px',
+                    small: '12px'
+                },
+                'medium': { 
+                    h1: '42px',
+                    h2: '28px',
+                    h3: '22px',
+                    normal: '16px',
+                    small: '14px'
+                },
+                'large': { 
+                    h1: '52px',
+                    h2: '34px',
+                    h3: '26px',
+                    normal: '18px',
+                    small: '16px'
+                }
+            };
+
+            const currentSizes = sizes[size];
+            
+            document.querySelectorAll('h1').forEach(el => el.style.fontSize = currentSizes.h1);
+            document.querySelectorAll('h2').forEach(el => el.style.fontSize = currentSizes.h2);
+            document.querySelectorAll('h3').forEach(el => el.style.fontSize = currentSizes.h3);
+            document.querySelectorAll('p, .setting-description, .setting-title').forEach(el => el.style.fontSize = currentSizes.normal);
+            document.querySelectorAll('small, .btn-secondary, .btn-danger').forEach(el => el.style.fontSize = currentSizes.small);
+        }
+
+        function applyCurrentSettings() {
+            const savedTheme = localStorage.getItem('gym-theme') || 'dark';
+            const savedFontSize = localStorage.getItem('gym-fontSize') || 'medium';
+            
+            if (savedTheme === 'light') {
+                document.body.classList.add('light-mode');
+            }
+            
+            applyFontSize(savedFontSize);
+        }
     </script>
 </body>
 </html>
