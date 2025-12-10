@@ -871,19 +871,9 @@
             border-radius: 8px;
             margin-bottom: 20px;
         }
-
-        /* Owner photo in table */
-.owner-photo-table {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    object-fit: cover;
-    background-color: var(--primary-black-light);
-}
     </style>
 </head>
 <body>
-   <body>
     <div class="container">
         <!-- Sidebar -->
         <div class="sidebar">
@@ -896,7 +886,7 @@
                 <li data-tab="proprietarios"><a href="#"><i class="fas fa-user-tie"></i> Proprietários</a></li>
                 <li data-tab="personais"><a href="#"><i class="fas fa-dumbbell"></i> Personais</a></li>
                 <li data-tab="administradores"><a href="#"><i class="fas fa-shield-alt"></i> Administradores</a></li>
-                <li><a href="config.html"><i class="fas fa-cog"></i> Configurações</a></li>
+                <li><a href="#"><i class="fas fa-cog"></i> Configurações</a></li>
                 <li><a href="academias-publicas.html" target="_blank"><i class="fas fa-external-link-alt"></i> Ver Página Pública</a></li>
                 <li><a href="#"><i class="fas fa-sign-out-alt"></i> Sair</a></li>
             </ul>
@@ -931,7 +921,7 @@
                         <div class="card-title">Academias Cadastradas</div>
                         <div class="card-icon gym"><i class="fas fa-building"></i></div>
                     </div>
-                    <div class="card-value">3</div>
+                    <div class="card-value" id="academiasCount">0</div>
                     <div class="card-footer">+0 desde a última semana</div>
                 </div>
                 
@@ -940,7 +930,7 @@
                         <div class="card-title">Proprietários</div>
                         <div class="card-icon owner"><i class="fas fa-user-tie"></i></div>
                     </div>
-                    <div class="card-value" id="ownerCount">3</div>
+                    <div class="card-value" id="proprietariosCount">0</div>
                     <div class="card-footer">+0 desde ontem</div>
                 </div>
                 
@@ -949,7 +939,7 @@
                         <div class="card-title">Personais</div>
                         <div class="card-icon personal"><i class="fas fa-dumbbell"></i></div>
                     </div>
-                    <div class="card-value">24</div>
+                    <div class="card-value" id="personaisCount">0</div>
                     <div class="card-footer">+5 desde a última semana</div>
                 </div>
                 
@@ -984,18 +974,27 @@
                                 <th>Ações</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="academiasTbody">
                             <!-- As academias serão carregadas dinamicamente aqui -->
                         </tbody>
                     </table>
                 </div>
                 
-                <!-- Owners Section -->
+                <!-- Proprietários Section -->
                 <div class="section" id="proprietarios-section" style="display: none;">
                     <div class="section-header">
                         <h3 class="section-title">Proprietários</h3>
-                        <button class="btn btn-primary" id="btnNovoProprietario">Novo Proprietário</button>
+                        <button class="btn btn-primary" id="btnNovoProprietario">
+                            <i class="fas fa-plus"></i> Novo Proprietário
+                        </button>
                     </div>
+                    
+                    <!-- Barra de busca específica para proprietários -->
+                    <div class="search-container" style="margin: 20px;">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" class="search-input" id="searchProprietario" placeholder="Buscar proprietários...">
+                    </div>
+                    
                     <table>
                         <thead>
                             <tr>
@@ -1009,49 +1008,38 @@
                                 <th>Ações</th>
                             </tr>
                         </thead>
-                        <tbody id="ownersTableBody">
+                        <tbody id="proprietariosTbody">
                             <!-- Proprietários carregados dinamicamente aqui -->
                         </tbody>
                     </table>
                 </div>
-                
-                <!-- Personals Section -->
+                 
+                <!-- Personais Section -->
                 <div class="section" id="personais-section" style="display: none;">
                     <div class="section-header">
                         <h3 class="section-title">Gerenciamento de Personais</h3>
-                        <button class="btn btn-primary">Acessar Página de Personais</button>
+                        <button class="btn btn-primary" id="btnNovoPersonal">Novo Personal</button>
+                        <a href="area-admin.html"><button class="btn btn-primary">Vizualizar Pedidos</button></a>
                     </div>
-                    
-                    <div class="personals-hero">
-                        <div class="personals-hero-content">
-                            <div>
-                                <h3 style="margin-bottom: 10px;">Personal Trainers Cadastrados</h3>
-                                <p style="margin-bottom: 15px; color: var(--primary-green-light);">Gerencie todos os profissionais cadastrados na plataforma</p>
-                                <div style="font-size: 2.5rem; font-weight: bold; color: var(--primary-green);">24</div>
-                                <p style="color: var(--primary-green-light);">personais ativos</p>
-                            </div>
-                            <div>
-                                <i class="fas fa-dumbbell" style="font-size: 5rem; color: var(--primary-green); opacity: 0.3;"></i>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="personals-stats">
-                        <div class="stat-card">
-                            <div class="stat-value" style="color: var(--primary-green);">18</div>
-                            <div class="stat-label">Personais Ativos</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-value" style="color: #ffc107;">4</div>
-                            <div class="stat-label">Aguardando Aprovação</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-value" style="color: var(--primary-gray-light);">2</div>
-                            <div class="stat-label">Inativos</div>
-                        </div>
-                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Especialidade</th>
+                                <th>Experiência</th>
+                                <th>Email</th>
+                                <th>Telefone</th>
+                                <th>Academia</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="personaisTbody">
+                            <!-- Personais serão carregados dinamicamente aqui -->
+                        </tbody>
+                    </table>
                 </div>
-                
+
                 <!-- Administrators Section -->
                 <div class="section" id="administradores-section" style="display: none;">
                     <div class="section-header">
@@ -1145,7 +1133,7 @@
     <div id="modalAcademia" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3><i class="fas fa-building"></i> <span id="modalTitle">Cadastrar Nova Academia</span></h3>
+                <h3><i class="fas fa-building"></i> <span id="modalAcademiaTitle">Cadastrar Nova Academia</span></h3>
                 <span class="close-btn">&times;</span>
             </div>
             <div class="modal-body">
@@ -1154,71 +1142,64 @@
                     
                     <div class="form-group">
                         <div class="photo-upload-container">
-                            <div class="photo-preview" id="photoPreview">
+                            <div class="photo-preview" id="academiaPhotoPreview">
                                 <i class="fas fa-camera"></i>
-                                <img id="previewImage" src="" alt="Preview">
+                                <img id="academiaPreviewImage" src="" alt="Preview">
                             </div>
                             <div>
-                                <label for="gymPhoto">Foto da Academia</label>
+                                <label for="academiaPhoto">Foto da Academia</label>
                                 <p style="color: var(--primary-gray-light); margin-bottom: 10px;">Envie uma foto da fachada ou logotipo da academia</p>
-                                <button type="button" class="upload-btn" id="uploadPhotoBtn">
+                                <button type="button" class="upload-btn" id="uploadAcademiaPhotoBtn">
                                     <i class="fas fa-upload"></i> Escolher Foto
                                 </button>
-                                <input type="file" id="gymPhoto" accept="image/*" style="display: none;">
+                                <input type="file" id="academiaPhoto" accept="image/*" style="display: none;">
                             </div>
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="gymName">Nome da Academia *</label>
-                            <input type="text" id="gymName" placeholder="Ex: Academia Fitness Plus" required>
+                            <label for="academiaNome">Nome da Academia *</label>
+                            <input type="text" id="academiaNome" placeholder="Ex: Academia Fitness Plus" required>
                         </div>
                         <div class="form-group">
-                            <label for="gymCNPJ">CNPJ *</label>
-                            <input type="text" id="gymCNPJ" placeholder="00.000.000/0000-00" required>
+                            <label for="academiaCNPJ">CNPJ *</label>
+                            <input type="text" id="academiaCNPJ" placeholder="00.000.000/0000-00" required>
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="gymEmail">E-mail</label>
-                            <input type="email" id="gymEmail" placeholder="contato@academia.com">
+                            <label for="academiaEmail">E-mail</label>
+                            <input type="email" id="academiaEmail" placeholder="contato@academia.com">
                         </div>
                         <div class="form-group">
-                            <label for="gymPhone">Telefone</label>
-                            <input type="tel" id="gymPhone" placeholder="(11) 99999-9999">
+                            <label for="academiaTelefone">Telefone</label>
+                            <input type="tel" id="academiaTelefone" placeholder="(11) 99999-9999">
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="gymType">Tipo de Academia *</label>
-                        <div class="type-selector">
-                            <div class="type-option" data-type="musculacao">
-                                <i class="fas fa-dumbbell"></i>
-                                <span>Musculação</span>
-                            </div>
-                            <div class="type-option" data-type="artes-marciais">
-                                <i class="fas fa-user-ninja"></i>
-                                <span>Artes Marciais</span>
-                            </div>
-                        </div>
-                        <input type="hidden" id="gymType" value="musculacao" required>
+                        <label for="academiaTipo">Tipo de Academia *</label>
+                        <select id="academiaTipo" required>
+                            <option value="musculacao">Musculação</option>
+                            <option value="artes-marciais">Artes Marciais</option>
+                        </select>
                     </div>
 
                     <div class="form-group">
-                        <label for="gymAddress">Endereço Completo *</label>
-                        <input type="text" id="gymAddress" placeholder="Rua, Número, Bairro, Cidade - Estado" required>
+                        <label for="academiaEndereco">Endereço Completo *</label>
+                        <input type="text" id="academiaEndereco" placeholder="Rua, Número, Bairro, Cidade - Estado" required>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="gymCity">Cidade</label>
-                            <input type="text" id="gymCity" placeholder="São Paulo">
+                            <label for="academiaCidade">Cidade</label>
+                            <input type="text" id="academiaCidade" placeholder="São Paulo">
                         </div>
                         <div class="form-group">
-                            <label for="gymState">Estado</label>
-                            <select id="gymState">
+                            <label for="academiaEstado">Estado</label>
+                            <select id="academiaEstado">
                                 <option value="">Selecione</option>
                                 <option value="AC">Acre</option>
                                 <option value="AL">Alagoas</option>
@@ -1252,10 +1233,10 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="gymPrice">Preço da Mensalidade *</label>
+                        <label for="academiaPreco">Preço da Mensalidade *</label>
                         <div class="price-input-container">
                             <span class="price-symbol">R$</span>
-                            <input type="number" id="gymPrice" placeholder="0.00" min="0" step="5" value="60" required>
+                            <input type="number" id="academiaPreco" placeholder="0.00" min="0" step="5" value="60" required>
                         </div>
                         <p style="margin-top: 5px; color: var(--primary-gray-light); font-size: 0.9rem;">
                             Preço mensal que será exibido na página pública
@@ -1263,16 +1244,15 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="gymOwner">Proprietário *</label>
-                        <select id="gymOwner" required>
+                        <label for="academiaProprietario">Proprietário *</label>
+                        <select id="academiaProprietario" required>
                             <option value="">Selecione um proprietário</option>
-                            <!-- Opções serão preenchidas dinamicamente -->
                         </select>
                     </div>
 
                     <div class="form-group">
-                        <label for="gymDescription">Descrição</label>
-                        <textarea id="gymDescription" placeholder="Descreva as instalações, equipamentos e serviços oferecidos pela academia..." rows="3"></textarea>
+                        <label for="academiaDescricao">Descrição</label>
+                        <textarea id="academiaDescricao" placeholder="Descreva as instalações, equipamentos e serviços oferecidos pela academia..." rows="3"></textarea>
                     </div>
 
                     <div class="form-group">
@@ -1303,33 +1283,51 @@
                                 <span>Piscina</span>
                             </div>
                         </div>
-                        <input type="hidden" id="gymFacilities" value="">
+                        <input type="hidden" id="academiaFacilidades" value="">
                     </div>
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="gymOpening">Horário de Abertura</label>
-                            <input type="time" id="gymOpening" value="06:00">
+                            <label for="academiaAbertura">Horário de Abertura</label>
+                            <input type="time" id="academiaAbertura" value="06:00">
                         </div>
                         <div class="form-group">
-                            <label for="gymClosing">Horário de Fechamento</label>
-                            <input type="time" id="gymClosing" value="22:00">
+                            <label for="academiaFechamento">Horário de Fechamento</label>
+                            <input type="time" id="academiaFechamento" value="22:00">
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="gymStatus">Status</label>
-                        <select id="gymStatus">
-                            <option value="active">Ativo</option>
-                            <option value="inactive">Inativo</option>
-                            <option value="pending">Pendente</option>
+                        <label for="academiaStatus">Status</label>
+                        <select id="academiaStatus">
+                            <option value="ativo">Ativo</option>
+                            <option value="inativo">Inativo</option>
+                            <option value="pendente">Pendente</option>
                         </select>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" id="btnCancelar">Cancelar</button>
+                <button type="button" class="btn btn-secondary" id="btnCancelarAcademia">Cancelar</button>
                 <button type="button" class="btn btn-primary" id="btnSalvarAcademia">Salvar Academia</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Ver Detalhes da Academia -->
+    <div id="modalDetalhesAcademia" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-info-circle"></i> Detalhes da Academia</h3>
+                <span class="close-btn">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="detailsAcademiaContent">
+                    <!-- Detalhes serão carregados aqui -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="btnFecharDetalhesAcademia">Fechar</button>
             </div>
         </div>
     </div>
@@ -1338,65 +1336,65 @@
     <div id="modalProprietario" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3><i class="fas fa-user-tie"></i> <span id="modalOwnerTitle">Cadastrar Novo Proprietário</span></h3>
+                <h3><i class="fas fa-user-tie"></i> <span id="modalProprietarioTitle">Cadastrar Novo Proprietário</span></h3>
                 <span class="close-btn">&times;</span>
             </div>
             <div class="modal-body">
                 <form id="formProprietario">
-                    <input type="hidden" id="ownerId">
+                    <input type="hidden" id="proprietarioId">
                     
                     <div class="form-group">
                         <div class="photo-upload-container">
-                            <div class="photo-preview" id="ownerPhotoPreview">
-                                <i class="fas fa-camera"></i>
-                                <img id="ownerPreviewImage" src="" alt="Preview">
+                            <div class="photo-preview" id="proprietarioPhotoPreview">
+                                <i class="fas fa-user"></i>
+                                <img id="proprietarioPreviewImage" src="" alt="Preview">
                             </div>
                             <div>
-                                <label for="ownerPhoto">Foto do Proprietário</label>
+                                <label for="proprietarioPhoto">Foto do Proprietário</label>
                                 <p style="color: var(--primary-gray-light); margin-bottom: 10px;">Envie uma foto de perfil</p>
-                                <button type="button" class="upload-btn" id="uploadOwnerPhotoBtn">
+                                <button type="button" class="upload-btn" id="uploadProprietarioPhotoBtn">
                                     <i class="fas fa-upload"></i> Escolher Foto
                                 </button>
-                                <input type="file" id="ownerPhoto" accept="image/*" style="display: none;">
+                                <input type="file" id="proprietarioPhoto" accept="image/*" style="display: none;">
                             </div>
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="ownerName">Nome Completo *</label>
-                            <input type="text" id="ownerName" placeholder="Ex: João Silva" required>
+                            <label for="proprietarioNome">Nome Completo *</label>
+                            <input type="text" id="proprietarioNome" placeholder="Ex: João Silva" required>
                         </div>
                         <div class="form-group">
-                            <label for="ownerEmail">Email *</label>
-                            <input type="email" id="ownerEmail" placeholder="joao@email.com" required>
+                            <label for="proprietarioEmail">Email *</label>
+                            <input type="email" id="proprietarioEmail" placeholder="joao@email.com" required>
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="ownerCPF">CPF *</label>
-                            <input type="text" id="ownerCPF" placeholder="000.000.000-00" required>
+                            <label for="proprietarioCPF">CPF *</label>
+                            <input type="text" id="proprietarioCPF" placeholder="000.000.000-00" required>
                         </div>
                         <div class="form-group">
-                            <label for="ownerPhone">Telefone</label>
-                            <input type="tel" id="ownerPhone" placeholder="(11) 99999-9999">
+                            <label for="proprietarioTelefone">Telefone</label>
+                            <input type="tel" id="proprietarioTelefone" placeholder="(11) 99999-9999">
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="ownerAddress">Endereço</label>
-                        <input type="text" id="ownerAddress" placeholder="Rua, Número, Bairro">
+                        <label for="proprietarioEndereco">Endereço</label>
+                        <input type="text" id="proprietarioEndereco" placeholder="Rua, Número, Bairro">
                     </div>
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="ownerCity">Cidade</label>
-                            <input type="text" id="ownerCity" placeholder="São Paulo">
+                            <label for="proprietarioCidade">Cidade</label>
+                            <input type="text" id="proprietarioCidade" placeholder="São Paulo">
                         </div>
                         <div class="form-group">
-                            <label for="ownerState">Estado</label>
-                            <select id="ownerState">
+                            <label for="proprietarioEstado">Estado</label>
+                            <select id="proprietarioEstado">
                                 <option value="">Selecione</option>
                                 <option value="AC">Acre</option>
                                 <option value="AL">Alagoas</option>
@@ -1430,16 +1428,16 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="ownerDescription">Descrição</label>
-                        <textarea id="ownerDescription" placeholder="Informações adicionais..." rows="3"></textarea>
+                        <label for="proprietarioDescricao">Descrição</label>
+                        <textarea id="proprietarioDescricao" placeholder="Informações adicionais..." rows="3"></textarea>
                     </div>
 
                     <div class="form-group">
-                        <label for="ownerStatus">Status</label>
-                        <select id="ownerStatus">
-                            <option value="active">Ativo</option>
-                            <option value="inactive">Inativo</option>
-                            <option value="pending">Pendente</option>
+                        <label for="proprietarioStatus">Status</label>
+                        <select id="proprietarioStatus">
+                            <option value="ativo">Ativo</option>
+                            <option value="inativo">Inativo</option>
+                            <option value="pendente">Pendente</option>
                         </select>
                     </div>
                 </form>
@@ -1452,14 +1450,14 @@
     </div>
 
     <!-- Modal para Ver Detalhes do Proprietário -->
-    <div id="modalOwnerDetalhes" class="modal">
+    <div id="modalDetalhesProprietario" class="modal">
         <div class="modal-content">
             <div class="modal-header">
                 <h3><i class="fas fa-info-circle"></i> Detalhes do Proprietário</h3>
                 <span class="close-btn">&times;</span>
             </div>
             <div class="modal-body">
-                <div id="ownerDetailsContent">
+                <div id="detailsProprietarioContent">
                     <!-- Detalhes serão carregados aqui -->
                 </div>
             </div>
@@ -1469,146 +1467,105 @@
         </div>
     </div>
 
-    <!-- Modal para Ver Detalhes da Academia -->
-    <div id="modalDetalhes" class="modal">
+    <!-- Modal para Novo/Editar Personal -->
+    <div id="modalPersonal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3><i class="fas fa-info-circle"></i> Detalhes da Academia</h3>
+                <h3><i class="fas fa-dumbbell"></i> <span id="modalPersonalTitle">Cadastrar Novo Personal</span></h3>
                 <span class="close-btn">&times;</span>
             </div>
             <div class="modal-body">
-                <div id="detailsContent">
+                <form id="formPersonal">
+                    <input type="hidden" id="personalId">
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="personalNome">Nome Completo *</label>
+                            <input type="text" id="personalNome" placeholder="Ex: Carlos Silva" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="personalEmail">E-mail *</label>
+                            <input type="email" id="personalEmail" placeholder="exemplo@email.com" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="personalTelefone">Telefone *</label>
+                            <input type="tel" id="personalTelefone" placeholder="(11) 99999-9999" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="personalEspecialidade">Especialidade *</label>
+                            <select id="personalEspecialidade" required>
+                                <option value="">Selecione</option>
+                                <option value="Musculação">Musculação</option>
+                                <option value="Emagrecimento">Emagrecimento</option>
+                                <option value="Condicionamento Físico">Condicionamento Físico</option>
+                                <option value="Crossfit">Crossfit</option>
+                                <option value="Treino Funcional">Treino Funcional</option>
+                                <option value="Reabilitação">Reabilitação</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="personalAnos">Anos de Experiência *</label>
+                            <input type="number" id="personalAnos" min="0" max="50" value="3" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="personalStatus">Status *</label>
+                            <select id="personalStatus" required>
+                                <option value="ativo">Ativo</option>
+                                <option value="pendente">Pendente</option>
+                                <option value="inativo">Inativo</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="personalAcademia">Academia Associada</label>
+                        <select id="personalAcademia">
+                            <option value="">Nenhuma (Independente)</option>
+                            <!-- As academias serão carregadas dinamicamente -->
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="personalDescricao">Sobre o Personal</label>
+                        <textarea id="personalDescricao" placeholder="Descreva a experiência, formação e especialidades do personal..." rows="4"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="btnCancelarPersonal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="btnSalvarPersonal">Salvar Personal</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Ver Detalhes do Personal -->
+    <div id="modalDetalhesPersonal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-info-circle"></i> Detalhes do Personal</h3>
+                <span class="close-btn">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="detailsPersonalContent">
                     <!-- Detalhes serão carregados aqui -->
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" id="btnFecharDetalhes">Fechar</button>
+                <button type="button" class="btn btn-secondary" id="btnFecharDetalhesPersonal">Fechar</button>
             </div>
         </div>
     </div>
-</body>
 
-   <script>
-    // ============================================
-    // SISTEMA DE PROPRIETÁRIOS
-    // ============================================
-    
-    // Funções para gerenciar proprietários
-    function saveOwnerToStorage(ownerData) {
-        let owners = JSON.parse(localStorage.getItem('gymOwners')) || [];
-        
-        const existingIndex = owners.findIndex(o => o.id === ownerData.id);
-        if (existingIndex !== -1) {
-            // Atualizar existente
-            owners[existingIndex] = ownerData;
-        } else {
-            // Adicionar novo
-            owners.push(ownerData);
-        }
-        
-        localStorage.setItem('gymOwners', JSON.stringify(owners));
-        updateOwnerCount();
-        updateOwnerSelectOptions();
-        return ownerData;
-    }
-    
-    function removeOwnerFromStorage(ownerId) {
-        let owners = JSON.parse(localStorage.getItem('gymOwners')) || [];
-        owners = owners.filter(owner => owner.id !== ownerId);
-        localStorage.setItem('gymOwners', JSON.stringify(owners));
-        updateOwnerCount();
-        updateOwnerSelectOptions();
-    }
-    
-    function getOwnerById(ownerId) {
-        const owners = JSON.parse(localStorage.getItem('gymOwners')) || [];
-        return owners.find(o => o.id === ownerId);
-    }
-    
-    function getAllOwners() {
-        return JSON.parse(localStorage.getItem('gymOwners')) || [];
-    }
-    
-    function updateOwnerCount() {
-        const owners = getAllOwners();
-        document.getElementById('ownerCount').textContent = owners.length;
-    }
-    
-    function updateOwnerSelectOptions() {
-        const owners = getAllOwners();
-        const select = document.getElementById('gymOwner');
-        
-        // Limpar opções existentes (exceto a primeira)
-        while (select.options.length > 1) {
-            select.remove(1);
-        }
-        
-        // Adicionar novas opções
-        owners.forEach(owner => {
-            if (owner.status === 'active') {
-                const option = document.createElement('option');
-                option.value = owner.name;
-                option.textContent = owner.name;
-                select.appendChild(option);
-            }
-        });
-    }
-    
+    <script>
     // ============================================
     // FUNÇÕES GLOBAIS
     // ============================================
-    
-    // Função para salvar academia no localStorage
-    function saveAcademyToStorage(academyData) {
-        let academies = JSON.parse(localStorage.getItem('gymAcademies')) || [];
-        
-        // Verificar se é edição ou nova
-        const existingIndex = academies.findIndex(a => a.id === academyData.id);
-        if (existingIndex !== -1) {
-            // Atualizar existente
-            academies[existingIndex] = academyData;
-        } else {
-            // Adicionar nova
-            academies.push(academyData);
-        }
-        
-        localStorage.setItem('gymAcademies', JSON.stringify(academies));
-        return academyData;
-    }
-    
-    // Função para remover academia do localStorage
-    function removeAcademyFromStorage(academyId) {
-        let academies = JSON.parse(localStorage.getItem('gymAcademies')) || [];
-        academies = academies.filter(academy => academy.id !== academyId);
-        localStorage.setItem('gymAcademies', JSON.stringify(academies));
-    }
-    
-    // Função para obter academia por ID
-    function getAcademyById(academyId) {
-        const academies = JSON.parse(localStorage.getItem('gymAcademies')) || [];
-        return academies.find(a => a.id === academyId);
-    }
-    
-    // Função para determinar localização
-    function determineLocation(address) {
-        if (address.includes('Praça') || address.includes('Matriz')) return 'praca-matriz';
-        if (address.includes('Vila') || address.includes('Kolping')) return 'vila-kolping';
-        if (address.includes('Chapada') || address.includes('Serra')) return 'chapada-serra';
-        return 'centro';
-    }
-    
-    // Função para imagem padrão
-    function getDefaultGymImage(type) {
-        const images = {
-            'musculacao': 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400&h=250&fit=crop&q=80',
-            'artes-marciais': 'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=400&h=250&fit=crop&q=80'
-        };
-        return images[type] || images.musculacao;
-    }
-    
-    function getDefaultOwnerImage() {
-        return 'https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=150&h=150&fit=crop&q=80';
-    }
     
     // Função para mostrar alerta
     function showAlert(message, type = 'success') {
@@ -1636,516 +1593,1251 @@
     }
     
     // ============================================
-    // CÓDIGO PRINCIPAL
+    // SISTEMA DE PROPRIETÁRIOS
     // ============================================
     
-    document.addEventListener('DOMContentLoaded', function() {
-        // Elementos principais
-        const modal = document.getElementById('modalAcademia');
-        const modalDetalhes = document.getElementById('modalDetalhes');
-        const btnNovaAcademia = document.getElementById('btnNovaAcademia');
-        const closeBtns = document.querySelectorAll('.close-btn, #btnCancelar, #btnFecharDetalhes');
-        const btnSalvarAcademia = document.getElementById('btnSalvarAcademia');
-        const uploadPhotoBtn = document.getElementById('uploadPhotoBtn');
-        const gymPhotoInput = document.getElementById('gymPhoto');
-        const previewImage = document.getElementById('previewImage');
-        const photoPreview = document.getElementById('photoPreview');
-        const formAcademia = document.getElementById('formAcademia');
-        const modalTitle = document.getElementById('modalTitle');
+    // Função para carregar proprietários do localStorage
+    function getProprietariosFromStorage() {
+        return JSON.parse(localStorage.getItem('gymProprietarios')) || [];
+    }
+    
+    // Função para salvar proprietários no localStorage
+    function saveProprietariosToStorage(proprietarios) {
+        localStorage.setItem('gymProprietarios', JSON.stringify(proprietarios));
+    }
+    
+    // Função para atualizar contador de proprietários
+    function updateProprietariosCount() {
+        const proprietarios = getProprietariosFromStorage();
+        document.getElementById('proprietariosCount').textContent = proprietarios.length;
+    }
+    
+    // Função para renderizar proprietários na tabela
+    function renderProprietariosTable() {
+        const proprietarios = getProprietariosFromStorage();
+        const tbody = document.getElementById('proprietariosTbody');
         
-        // Elementos da tabela
-        const academiasTbody = document.querySelector('#academias-section tbody');
-        const gymCardValue = document.querySelector('.card[data-tab="academias"] .card-value');
-        
-        // Elementos dos campos
-        const gymPrice = document.getElementById('gymPrice');
-        const gymTypeInput = document.getElementById('gymType');
-        const typeOptions = document.querySelectorAll('.type-option');
-        const facilityOptions = document.querySelectorAll('.facility-option');
-        const gymFacilitiesInput = document.getElementById('gymFacilities');
-        const academyIdInput = document.getElementById('academyId');
-        
-        // Variável para controlar modo de edição
-        let editingAcademyId = null;
-        
-        // ============================================
-        // FUNÇÕES AUXILIARES
-        // ============================================
-        
-        // Abrir modal para nova academia
-        function openNewAcademyModal() {
-            editingAcademyId = null;
-            modalTitle.textContent = 'Cadastrar Nova Academia';
-            btnSalvarAcademia.textContent = 'Salvar Academia';
-            formAcademia.reset();
-            previewImage.style.display = 'none';
-            photoPreview.querySelector('i').style.display = 'block';
-            resetTypeSelector();
-            resetFacilitiesSelector();
-            modal.style.display = 'block';
+        if (proprietarios.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="8" style="text-align: center; padding: 20px; color: var(--primary-gray-light);">
+                        Nenhum proprietário cadastrado
+                    </td>
+                </tr>
+            `;
+            return;
         }
         
-        // Abrir modal para editar academia
-        function openEditAcademyModal(academyId) {
-            const academy = getAcademyById(academyId);
-            if (!academy) {
-                showAlert('Academia não encontrada!', 'error');
+        tbody.innerHTML = proprietarios.map(proprietario => {
+            const statusMap = {
+                'ativo': 'active',
+                'inativo': 'inactive',
+                'pendente': 'pending'
+            };
+            
+            const statusClass = statusMap[proprietario.status] || 'pending';
+            const statusText = proprietario.status.charAt(0).toUpperCase() + proprietario.status.slice(1);
+            
+            return `
+                <tr data-id="${proprietario.id}">
+                    <td>
+                        <img src="${proprietario.foto || 'https://via.placeholder.com/60/545b67/ffffff?text=P'}" 
+                             class="gym-photo-table" 
+                             alt="${proprietario.nome}"
+                             style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;">
+                    </td>
+                    <td>${proprietario.nome}</td>
+                    <td>${proprietario.email}</td>
+                    <td>${proprietario.telefone || 'Não informado'}</td>
+                    <td>${proprietario.cpf}</td>
+                    <td><span class="status ${statusClass}">${statusText}</span></td>
+                    <td>${new Date(proprietario.dataCadastro).toLocaleDateString('pt-BR')}</td>
+                    <td>
+                        <button class="action-btn btn-ver-proprietario" title="Ver detalhes" data-id="${proprietario.id}">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="action-btn btn-editar-proprietario" title="Editar" data-id="${proprietario.id}">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="action-btn btn-excluir-proprietario" title="Excluir" data-id="${proprietario.id}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `;
+        }).join('');
+        
+        // Adicionar eventos aos botões
+        addProprietarioTableEvents();
+    }
+    
+    // Função para adicionar eventos aos botões da tabela
+    function addProprietarioTableEvents() {
+        // Botões de ver detalhes
+        document.querySelectorAll('.btn-ver-proprietario').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const proprietarioId = this.getAttribute('data-id');
+                openProprietarioDetailsModal(proprietarioId);
+            });
+        });
+        
+        // Botões de editar
+        document.querySelectorAll('.btn-editar-proprietario').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const proprietarioId = this.getAttribute('data-id');
+                openEditProprietarioModal(proprietarioId);
+            });
+        });
+        
+        // Botões de excluir
+        document.querySelectorAll('.btn-excluir-proprietario').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const proprietarioId = this.getAttribute('data-id');
+                deleteProprietario(proprietarioId);
+            });
+        });
+    }
+    
+    // Função para abrir modal de edição
+    function openEditProprietarioModal(proprietarioId = null) {
+        const modal = document.getElementById('modalProprietario');
+        const modalTitle = document.getElementById('modalProprietarioTitle');
+        
+        if (proprietarioId) {
+            // Modo edição
+            const proprietarios = getProprietariosFromStorage();
+            const proprietario = proprietarios.find(p => p.id == proprietarioId);
+            
+            if (!proprietario) {
+                showAlert('Proprietário não encontrado!', 'error');
                 return;
             }
             
-            editingAcademyId = academyId;
-            modalTitle.textContent = 'Editar Academia';
-            btnSalvarAcademia.textContent = 'Atualizar Academia';
-            
-            // Preencher formulário com dados existentes
-            document.getElementById('gymName').value = academy.name;
-            document.getElementById('gymCNPJ').value = academy.cnpj || '';
-            document.getElementById('gymEmail').value = academy.email || '';
-            document.getElementById('gymPhone').value = academy.phone || '';
-            document.getElementById('gymAddress').value = academy.address || '';
-            document.getElementById('gymCity').value = academy.city || '';
-            document.getElementById('gymState').value = academy.state || '';
-            document.getElementById('gymPrice').value = academy.price || '60';
-            document.getElementById('gymOwner').value = academy.owner || '';
-            document.getElementById('gymDescription').value = academy.description || '';
-            document.getElementById('gymStatus').value = academy.status || 'active';
-            
-            // Definir tipo
-            setTypeSelector(academy.type || 'musculacao');
-            
-            // Definir facilidades
-            setFacilitiesSelector(academy.facilities || []);
-            
-            // Definir horários
-            if (academy.schedule) {
-                const scheduleParts = academy.schedule.weekdays?.split(' - ') || ['06:00', '22:00'];
-                document.getElementById('gymOpening').value = scheduleParts[0] || '06:00';
-                document.getElementById('gymClosing').value = scheduleParts[1] || '22:00';
-            }
+            modalTitle.textContent = 'Editar Proprietário';
+            document.getElementById('proprietarioId').value = proprietarioId;
+            document.getElementById('proprietarioNome').value = proprietario.nome;
+            document.getElementById('proprietarioEmail').value = proprietario.email;
+            document.getElementById('proprietarioCPF').value = proprietario.cpf;
+            document.getElementById('proprietarioTelefone').value = proprietario.telefone || '';
+            document.getElementById('proprietarioEndereco').value = proprietario.endereco || '';
+            document.getElementById('proprietarioCidade').value = proprietario.cidade || '';
+            document.getElementById('proprietarioEstado').value = proprietario.estado || '';
+            document.getElementById('proprietarioDescricao').value = proprietario.descricao || '';
+            document.getElementById('proprietarioStatus').value = proprietario.status;
             
             // Definir imagem
-            if (academy.image && academy.image !== '') {
-                previewImage.src = academy.image;
+            const previewImage = document.getElementById('proprietarioPreviewImage');
+            const previewIcon = document.querySelector('#proprietarioPhotoPreview i');
+            
+            if (proprietario.foto && proprietario.foto !== '') {
+                previewImage.src = proprietario.foto;
                 previewImage.style.display = 'block';
-                photoPreview.querySelector('i').style.display = 'none';
+                previewIcon.style.display = 'none';
             } else {
                 previewImage.style.display = 'none';
-                photoPreview.querySelector('i').style.display = 'block';
+                previewIcon.style.display = 'block';
             }
+        } else {
+            // Modo novo
+            modalTitle.textContent = 'Cadastrar Novo Proprietário';
+            document.getElementById('formProprietario').reset();
+            document.getElementById('proprietarioId').value = '';
+            document.getElementById('proprietarioStatus').value = 'ativo';
             
-            // Definir ID
-            academyIdInput.value = academyId;
-            
-            modal.style.display = 'block';
+            // Resetar imagem
+            const previewImage = document.getElementById('proprietarioPreviewImage');
+            const previewIcon = document.querySelector('#proprietarioPhotoPreview i');
+            previewImage.style.display = 'none';
+            previewIcon.style.display = 'block';
         }
         
-        // Abrir modal de detalhes
-        function openDetailsModal(academyId) {
-            const academy = getAcademyById(academyId);
-            if (!academy) {
-                showAlert('Academia não encontrada!', 'error');
-                return;
+        modal.style.display = 'block';
+    }
+    
+    // Função para salvar/atualizar proprietário
+    function saveProprietario() {
+        const form = document.getElementById('formProprietario');
+        
+        // Validar campos obrigatórios
+        const nome = document.getElementById('proprietarioNome').value;
+        const email = document.getElementById('proprietarioEmail').value;
+        const cpf = document.getElementById('proprietarioCPF').value;
+        const status = document.getElementById('proprietarioStatus').value;
+        
+        if (!nome || !email || !cpf || !status) {
+            showAlert('Por favor, preencha todos os campos obrigatórios!', 'error');
+            return;
+        }
+        
+        const proprietarioId = document.getElementById('proprietarioId').value;
+        const isEditing = proprietarioId !== '';
+        
+        // Obter URL da foto
+        const previewImage = document.getElementById('proprietarioPreviewImage');
+        const foto = previewImage.style.display === 'block' ? previewImage.src : '';
+        
+        const proprietarioData = {
+            id: isEditing ? parseInt(proprietarioId) : Date.now(),
+            nome: nome,
+            email: email,
+            cpf: cpf,
+            telefone: document.getElementById('proprietarioTelefone').value || '',
+            endereco: document.getElementById('proprietarioEndereco').value || '',
+            cidade: document.getElementById('proprietarioCidade').value || '',
+            estado: document.getElementById('proprietarioEstado').value || '',
+            descricao: document.getElementById('proprietarioDescricao').value || '',
+            status: status,
+            foto: foto,
+            dataCadastro: isEditing ? 
+                (getProprietariosFromStorage().find(p => p.id == proprietarioId)?.dataCadastro || new Date().toISOString()) : 
+                new Date().toISOString()
+        };
+        
+        let proprietarios = getProprietariosFromStorage();
+        
+        if (isEditing) {
+            // Atualizar
+            const index = proprietarios.findIndex(p => p.id == proprietarioId);
+            if (index !== -1) {
+                proprietarios[index] = proprietarioData;
             }
+        } else {
+            // Adicionar novo
+            proprietarios.push(proprietarioData);
+        }
+        
+        saveProprietariosToStorage(proprietarios);
+        
+        // Fechar modal
+        document.getElementById('modalProprietario').style.display = 'none';
+        form.reset();
+        
+        // Atualizar tabela
+        renderProprietariosTable();
+        
+        // Atualizar contador
+        updateProprietariosCount();
+        
+        // Atualizar select de proprietários na modal de academia
+        updateProprietariosSelect();
+        
+        showAlert(`Proprietário ${isEditing ? 'atualizado' : 'cadastrado'} com sucesso!`, 'success');
+    }
+    
+    // Função para excluir proprietário
+    function deleteProprietario(proprietarioId) {
+        const proprietarios = getProprietariosFromStorage();
+        const proprietario = proprietarios.find(p => p.id == proprietarioId);
+        
+        if (!proprietario) return;
+        
+        // Verificar se o proprietário tem academias associadas
+        const academias = getAcademiasFromStorage();
+        const academiasAssociadas = academias.filter(a => a.proprietario === proprietario.nome);
+        
+        if (academiasAssociadas.length > 0) {
+            showAlert(`Este proprietário tem ${academiasAssociadas.length} academia(s) associada(s). Transfira as academias para outro proprietário antes de excluir.`, 'error');
+            return;
+        }
+        
+        if (confirm(`Tem certeza que deseja excluir o proprietário "${proprietario.nome}"?`)) {
+            const updatedProprietarios = proprietarios.filter(p => p.id != proprietarioId);
+            saveProprietariosToStorage(updatedProprietarios);
             
-            // Mapear status para português
-            const statusMap = {
-                'active': 'Ativo',
-                'inactive': 'Inativo',
-                'pending': 'Pendente'
-            };
+            // Atualizar tabela
+            renderProprietariosTable();
             
-            // Mapear tipo para português
-            const typeMap = {
-                'musculacao': 'Musculação',
-                'artes-marciais': 'Artes Marciais'
-            };
+            // Atualizar contador
+            updateProprietariosCount();
             
-            // Mapear facilidades para ícones
-            const facilityIcons = {
-                'estacionamento': 'fas fa-parking',
-                'ar-condicionado': 'fas fa-snowflake',
-                'vestiario': 'fas fa-shower',
-                'wifi': 'fas fa-wifi',
-                'personais': 'fas fa-dumbbell',
-                'piscina': 'fas fa-swimming-pool'
-            };
+            // Atualizar select de proprietários
+            updateProprietariosSelect();
             
-            // Mapear facilidades para nomes em português
-            const facilityNames = {
-                'estacionamento': 'Estacionamento',
-                'ar-condicionado': 'Ar Condicionado',
-                'vestiario': 'Vestiário',
-                'wifi': 'Wi-Fi',
-                'personais': 'Personais',
-                'piscina': 'Piscina'
-            };
+            showAlert('Proprietário excluído com sucesso!', 'success');
+        }
+    }
+    
+    // Função para abrir modal de detalhes
+    function openProprietarioDetailsModal(proprietarioId) {
+        const proprietarios = getProprietariosFromStorage();
+        const proprietario = proprietarios.find(p => p.id == proprietarioId);
+        
+        if (!proprietario) {
+            showAlert('Proprietário não encontrado!', 'error');
+            return;
+        }
+        
+        // Mapear status para português
+        const statusMap = {
+            'ativo': { text: 'Ativo', class: 'active' },
+            'inativo': { text: 'Inativo', class: 'inactive' },
+            'pendente': { text: 'Pendente', class: 'pending' }
+        };
+        
+        const status = statusMap[proprietario.status] || statusMap.ativo;
+        
+        // Verificar academias associadas
+        const academias = getAcademiasFromStorage();
+        const academiasAssociadas = academias.filter(a => a.proprietario === proprietario.nome);
+        
+        const detailsContent = document.getElementById('detailsProprietarioContent');
+        detailsContent.innerHTML = `
+            <div style="text-align: center; margin-bottom: 20px;">
+                <img src="${proprietario.foto || 'https://via.placeholder.com/150/545b67/ffffff?text=P'}" 
+                     style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; margin-bottom: 15px; border: 3px solid var(--primary-green);">
+                <h3 style="color: var(--primary-green); margin-bottom: 5px;">${proprietario.nome}</h3>
+                <span class="status ${status.class}" style="margin: 0 auto; display: inline-block;">${status.text}</span>
+            </div>
             
-            const detailsContent = document.getElementById('detailsContent');
-            detailsContent.innerHTML = `
-                <img src="${academy.image || getDefaultGymImage(academy.type)}" class="gym-details-photo" alt="${academy.name}">
-                
-                <div class="details-grid">
-                    <div class="details-item">
-                        <div class="details-label">Nome</div>
-                        <div class="details-value">${academy.name}</div>
-                    </div>
-                    <div class="details-item">
-                        <div class="details-label">Tipo</div>
-                        <div class="details-value">${typeMap[academy.type] || 'Musculação'}</div>
-                    </div>
-                    <div class="details-item">
-                        <div class="details-label">CNPJ</div>
-                        <div class="details-value">${academy.cnpj || 'Não informado'}</div>
-                    </div>
-                    <div class="details-item">
-                        <div class="details-label">Proprietário</div>
-                        <div class="details-value">${academy.owner || 'Não informado'}</div>
-                    </div>
-                    <div class="details-item">
-                        <div class="details-label">Endereço</div>
-                        <div class="details-value">${academy.address || 'Não informado'}</div>
-                    </div>
-                    <div class="details-item">
-                        <div class="details-label">Cidade/Estado</div>
-                        <div class="details-value">${academy.city || ''} ${academy.state ? '/' + academy.state : ''}</div>
-                    </div>
-                    <div class="details-item">
-                        <div class="details-label">Preço Mensal</div>
-                        <div class="details-value" style="color: var(--primary-green); font-weight: bold;">R$ ${academy.price || '60'}/mês</div>
-                    </div>
-                    <div class="details-item">
-                        <div class="details-label">Status</div>
-                        <div class="details-value">
-                            <span class="status ${academy.status === 'active' ? 'active' : academy.status === 'inactive' ? 'inactive' : 'pending'}">
-                                ${statusMap[academy.status] || 'Ativo'}
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                
+            <div class="details-grid">
                 <div class="details-item">
-                    <div class="details-label">Contato</div>
-                    <div class="details-value">
-                        ${academy.email ? `<div><i class="fas fa-envelope"></i> ${academy.email}</div>` : ''}
-                        ${academy.phone ? `<div style="margin-top: 5px;"><i class="fas fa-phone"></i> ${academy.phone}</div>` : ''}
-                    </div>
+                    <div class="details-label">E-mail</div>
+                    <div class="details-value">${proprietario.email}</div>
                 </div>
-                
-                ${academy.facilities && academy.facilities.length > 0 ? `
                 <div class="details-item">
-                    <div class="details-label">Facilidades</div>
-                    <div class="details-facilities">
-                        ${academy.facilities.map(facility => `
-                            <div class="facility-badge">
-                                <i class="${facilityIcons[facility] || 'fas fa-check'}"></i>
-                                ${facilityNames[facility] || facility}
+                    <div class="details-label">CPF</div>
+                    <div class="details-value">${proprietario.cpf}</div>
+                </div>
+                <div class="details-item">
+                    <div class="details-label">Telefone</div>
+                    <div class="details-value">${proprietario.telefone || 'Não informado'}</div>
+                </div>
+                <div class="details-item">
+                    <div class="details-label">Data de Cadastro</div>
+                    <div class="details-value">${new Date(proprietario.dataCadastro).toLocaleDateString('pt-BR')}</div>
+                </div>
+            </div>
+            
+            ${proprietario.endereco ? `
+            <div class="details-grid">
+                <div class="details-item">
+                    <div class="details-label">Endereço</div>
+                    <div class="details-value">${proprietario.endereco}</div>
+                </div>
+                <div class="details-item">
+                    <div class="details-label">Cidade/Estado</div>
+                    <div class="details-value">${proprietario.cidade || ''} ${proprietario.estado ? '/' + proprietario.estado : ''}</div>
+                </div>
+            </div>
+            ` : ''}
+            
+            ${proprietario.descricao ? `
+            <div class="details-item">
+                <div class="details-label">Descrição</div>
+                <div class="details-value" style="background-color: var(--primary-black-light); padding: 15px; border-radius: 6px; border: 1px solid var(--primary-gray-dark);">
+                    ${proprietario.descricao}
+                </div>
+            </div>
+            ` : ''}
+            
+            ${academiasAssociadas.length > 0 ? `
+            <div class="details-item">
+                <div class="details-label">Academias Associadas</div>
+                <div class="details-value">
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        ${academiasAssociadas.map(academia => `
+                            <div style="background-color: var(--primary-black-light); padding: 10px; border-radius: 6px; border-left: 3px solid var(--primary-green);">
+                                <strong>${academia.nome}</strong><br>
+                                <small>${academia.endereco}</small>
                             </div>
                         `).join('')}
                     </div>
+                    <p style="margin-top: 10px; color: var(--primary-green-light); font-size: 0.9rem;">
+                        Total: ${academiasAssociadas.length} academia(s)
+                    </p>
                 </div>
-                ` : ''}
-                
-                ${academy.schedule ? `
-                <div class="details-item">
-                    <div class="details-label">Horário de Funcionamento</div>
-                    <div class="details-value">
-                        <div><strong>Dias de semana:</strong> ${academy.schedule.weekdays || '06:00 - 22:00'}</div>
-                        <div><strong>Final de semana:</strong> ${academy.schedule.weekend || '08:00 - 17:00'}</div>
-                    </div>
-                </div>
-                ` : ''}
-                
-                ${academy.description ? `
-                <div class="details-item">
-                    <div class="details-label">Descrição</div>
-                    <div class="details-value">${academy.description}</div>
-                </div>
-                ` : ''}
-                
-                <div class="details-item">
-                    <div class="details-label">Data de Cadastro</div>
-                    <div class="details-value">${new Date(academy.createdAt).toLocaleDateString('pt-BR')}</div>
-                </div>
+            </div>
+            ` : ''}
+        `;
+        
+        const modal = document.getElementById('modalDetalhesProprietario');
+        modal.style.display = 'block';
+    }
+    
+    // Função para atualizar select de proprietários na modal de academia
+    function updateProprietariosSelect() {
+        const proprietarios = getProprietariosFromStorage();
+        const select = document.getElementById('academiaProprietario');
+        const currentValue = select.value;
+        
+        select.innerHTML = '<option value="">Selecione um proprietário</option>';
+        
+        proprietarios.forEach(proprietario => {
+            if (proprietario.status === 'ativo') {
+                const option = document.createElement('option');
+                option.value = proprietario.nome;
+                option.textContent = proprietario.nome;
+                select.appendChild(option);
+            }
+        });
+        
+        // Restaurar valor anterior se possível
+        if (currentValue) {
+            select.value = currentValue;
+        }
+    }
+    
+    // Inicializar proprietários com dados de exemplo
+    function initProprietarios() {
+        if (getProprietariosFromStorage().length === 0) {
+            const exampleProprietarios = [
+                {
+                    id: 1,
+                    nome: "João Silva",
+                    email: "joao@email.com",
+                    cpf: "123.456.789-00",
+                    telefone: "(11) 99999-9999",
+                    endereco: "Rua das Flores, 123",
+                    cidade: "São Paulo",
+                    estado: "SP",
+                    descricao: "Proprietário da Academia Fitness Plus",
+                    status: "ativo",
+                    foto: "https://via.placeholder.com/150/00ff88/000000?text=JS",
+                    dataCadastro: "2024-01-15T10:00:00.000Z"
+                },
+                {
+                    id: 2,
+                    nome: "Maria Santos",
+                    email: "maria@email.com",
+                    cpf: "987.654.321-00",
+                    telefone: "(21) 98888-8888",
+                    endereco: "Avenida Principal, 456",
+                    cidade: "Rio de Janeiro",
+                    estado: "RJ",
+                    descricao: "Proprietária da Power Gym",
+                    status: "ativo",
+                    foto: "https://via.placeholder.com/150/00ff88/000000?text=MS",
+                    dataCadastro: "2024-02-20T14:30:00.000Z"
+                },
+                {
+                    id: 3,
+                    nome: "Pedro Oliveira",
+                    email: "pedro@email.com",
+                    cpf: "456.789.123-00",
+                    telefone: "(31) 97777-7777",
+                    endereco: "Praça Central, 789",
+                    cidade: "Belo Horizonte",
+                    estado: "MG",
+                    descricao: "Proprietário da Strong Academy",
+                    status: "pendente",
+                    foto: "https://via.placeholder.com/150/00ff88/000000?text=PO",
+                    dataCadastro: "2024-03-10T09:15:00.000Z"
+                }
+            ];
+            
+            saveProprietariosToStorage(exampleProprietarios);
+        }
+        
+        renderProprietariosTable();
+        updateProprietariosCount();
+        updateProprietariosSelect();
+    }
+    
+    // ============================================
+    // SISTEMA DE ACADEMIAS (mantido do código original)
+    // ============================================
+    
+    // Função para carregar academias do localStorage
+    function getAcademiasFromStorage() {
+        return JSON.parse(localStorage.getItem('gymAcademies')) || [];
+    }
+    
+    // Função para salvar academias no localStorage
+    function saveAcademiasToStorage(academias) {
+        localStorage.setItem('gymAcademies', JSON.stringify(academias));
+    }
+    
+    // Função para atualizar contador de academias
+    function updateAcademiasCount() {
+        const academias = getAcademiasFromStorage();
+        document.getElementById('academiasCount').textContent = academias.length;
+    }
+    
+    // Função para renderizar academias na tabela
+    function renderAcademiasTable() {
+        const academias = getAcademiasFromStorage();
+        const tbody = document.getElementById('academiasTbody');
+        
+        if (academias.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="8" style="text-align: center; padding: 20px; color: var(--primary-gray-light);">
+                        Nenhuma academia cadastrada
+                    </td>
+                </tr>
             `;
+            return;
+        }
+        
+        tbody.innerHTML = academias.map(academia => {
+            const statusMap = {
+                'ativo': 'active',
+                'inativo': 'inactive',
+                'pendente': 'pending'
+            };
             
-            modalDetalhes.style.display = 'block';
-        }
-        
-        // Funções para gerenciar seletores
-        function resetTypeSelector() {
-            typeOptions.forEach(option => {
-                option.classList.remove('selected');
-                if (option.getAttribute('data-type') === 'musculacao') {
-                    option.classList.add('selected');
-                }
-            });
-            gymTypeInput.value = 'musculacao';
-        }
-        
-        function setTypeSelector(type) {
-            typeOptions.forEach(option => {
-                option.classList.remove('selected');
-                if (option.getAttribute('data-type') === type) {
-                    option.classList.add('selected');
-                }
-            });
-            gymTypeInput.value = type;
-        }
-        
-        function resetFacilitiesSelector() {
-            facilityOptions.forEach(option => {
-                option.classList.remove('selected');
-            });
-            gymFacilitiesInput.value = '';
-        }
-        
-        function setFacilitiesSelector(facilities) {
-            facilityOptions.forEach(option => {
-                const facility = option.getAttribute('data-facility');
-                option.classList.toggle('selected', facilities.includes(facility));
-            });
-            updateFacilitiesInput();
-        }
-        
-        function updateFacilitiesInput() {
-            const selectedFacilities = [];
-            facilityOptions.forEach(option => {
-                if (option.classList.contains('selected')) {
-                    selectedFacilities.push(option.getAttribute('data-facility'));
-                }
-            });
-            gymFacilitiesInput.value = selectedFacilities.join(',');
-        }
-        
-        // Carregar academias do localStorage para a tabela
-        function loadAcademiesToTable() {
-            const academies = JSON.parse(localStorage.getItem('gymAcademies')) || [];
-            academiasTbody.innerHTML = '';
+            const statusClass = statusMap[academia.status] || 'pending';
+            const statusText = academia.status.charAt(0).toUpperCase() + academia.status.slice(1);
             
-            if (academies.length > 0) {
-                academies.forEach(academy => {
-                    const statusText = academy.status === 'active' ? 'Ativo' : 
-                                     academy.status === 'inactive' ? 'Inativo' : 'Pendente';
-                    
-                    const newRow = document.createElement('tr');
-                    newRow.setAttribute('data-id', academy.id);
-                    newRow.innerHTML = `
-                        <td><img src="${academy.image || getDefaultGymImage(academy.type)}" class="gym-photo-table" alt="Academia"></td>
-                        <td>${academy.name}</td>
-                        <td>${academy.address || 'Não informado'}</td>
-                        <td><span class="price-display">R$ ${academy.price || '60'}/mês</span></td>
-                        <td>${academy.owner || 'Não informado'}</td>
-                        <td>${academy.cnpj || 'Não informado'}</td>
-                        <td><span class="status ${academy.status === 'active' ? 'active' : academy.status === 'inactive' ? 'inactive' : 'pending'}">${statusText}</span></td>
-                        <td>
-                            <button class="action-btn btn-detalhes" title="Detalhes" data-id="${academy.id}"><i class="fas fa-eye"></i></button>
-                            <button class="action-btn btn-editar" title="Editar" data-id="${academy.id}"><i class="fas fa-edit"></i></button>
-                            <button class="action-btn btn-excluir" title="Excluir" data-id="${academy.id}"><i class="fas fa-trash"></i></button>
-                        </td>
-                    `;
-                    academiasTbody.appendChild(newRow);
-                });
-                
-                // Atualizar contador
-                gymCardValue.textContent = academies.length;
-                
-                // Adicionar eventos aos botões
-                addTableButtonEvents();
-            }
-        }
+            return `
+                <tr data-id="${academia.id}">
+                    <td>
+                        <img src="${academia.foto || 'https://via.placeholder.com/60/545b67/ffffff?text=A'}" 
+                             class="gym-photo-table" 
+                             alt="${academia.nome}">
+                    </td>
+                    <td>${academia.nome}</td>
+                    <td>${academia.endereco}</td>
+                    <td><span class="price-display">R$ ${academia.preco}/mês</span></td>
+                    <td>${academia.proprietario}</td>
+                    <td>${academia.cnpj}</td>
+                    <td><span class="status ${statusClass}">${statusText}</span></td>
+                    <td>
+                        <button class="action-btn btn-ver-academia" title="Ver detalhes" data-id="${academia.id}">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="action-btn btn-editar-academia" title="Editar" data-id="${academia.id}">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="action-btn btn-excluir-academia" title="Excluir" data-id="${academia.id}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `;
+        }).join('');
         
-        // Adicionar eventos aos botões da tabela
-        function addTableButtonEvents() {
-            // Botões de detalhes
-            document.querySelectorAll('.btn-detalhes').forEach(btn => {
-                btn.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    const academyId = parseInt(this.getAttribute('data-id'));
-                    openDetailsModal(academyId);
-                });
+        // Adicionar eventos aos botões
+        addAcademiaTableEvents();
+    }
+    
+    // Função para adicionar eventos aos botões da tabela
+    function addAcademiaTableEvents() {
+        // Botões de ver detalhes
+        document.querySelectorAll('.btn-ver-academia').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const academiaId = this.getAttribute('data-id');
+                openAcademiaDetailsModal(academiaId);
             });
+        });
+        
+        // Botões de editar
+        document.querySelectorAll('.btn-editar-academia').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const academiaId = this.getAttribute('data-id');
+                openEditAcademiaModal(academiaId);
+            });
+        });
+        
+        // Botões de excluir
+        document.querySelectorAll('.btn-excluir-academia').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const academiaId = this.getAttribute('data-id');
+                deleteAcademia(academiaId);
+            });
+        });
+    }
+    
+    // Função para abrir modal de edição da academia
+    function openEditAcademiaModal(academiaId = null) {
+        const modal = document.getElementById('modalAcademia');
+        const modalTitle = document.getElementById('modalAcademiaTitle');
+        
+        if (academiaId) {
+            // Modo edição
+            const academias = getAcademiasFromStorage();
+            const academia = academias.find(a => a.id == academiaId);
             
-            // Botões de editar
-            document.querySelectorAll('.btn-editar').forEach(btn => {
-                btn.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    const academyId = parseInt(this.getAttribute('data-id'));
-                    openEditAcademyModal(academyId);
-                });
-            });
-            
-            // Botões de excluir
-            document.querySelectorAll('.btn-excluir').forEach(btn => {
-                btn.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    const academyId = parseInt(this.getAttribute('data-id'));
-                    const academy = getAcademyById(academyId);
-                    
-                    if (academy && confirm(`Tem certeza que deseja excluir a academia "${academy.name}"?`)) {
-                        // Remover da tabela
-                        const row = this.closest('tr');
-                        row.remove();
-                        
-                        // Remover do localStorage
-                        removeAcademyFromStorage(academyId);
-                        
-                        // Atualizar contador
-                        const academies = JSON.parse(localStorage.getItem('gymAcademies')) || [];
-                        gymCardValue.textContent = academies.length;
-                        
-                        showAlert('Academia excluída com sucesso!', 'success');
-                    }
-                });
-            });
-        }
-        
-        // ============================================
-        // EVENT LISTENERS
-        // ============================================
-        
-        // Abrir modal para nova academia
-        btnNovaAcademia.addEventListener('click', openNewAcademyModal);
-        
-        // Fechar modais
-        closeBtns.forEach(btn => {
-            btn.addEventListener('click', function() {
-                modal.style.display = 'none';
-                modalDetalhes.style.display = 'none';
-                formAcademia.reset();
-                previewImage.style.display = 'none';
-                photoPreview.querySelector('i').style.display = 'block';
-                resetTypeSelector();
-                resetFacilitiesSelector();
-                editingAcademyId = null;
-            });
-        });
-        
-        // Fechar modal ao clicar fora
-        window.addEventListener('click', function(event) {
-            if (event.target === modal) {
-                modal.style.display = 'none';
-                formAcademia.reset();
-                previewImage.style.display = 'none';
-                photoPreview.querySelector('i').style.display = 'block';
-                resetTypeSelector();
-                resetFacilitiesSelector();
-                editingAcademyId = null;
-            }
-            if (event.target === modalDetalhes) {
-                modalDetalhes.style.display = 'none';
-            }
-        });
-        
-        // Upload de foto
-        uploadPhotoBtn.addEventListener('click', function() {
-            gymPhotoInput.click();
-        });
-        
-        gymPhotoInput.addEventListener('change', function() {
-            const file = this.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    previewImage.src = e.target.result;
-                    previewImage.style.display = 'block';
-                    photoPreview.querySelector('i').style.display = 'none';
-                }
-                reader.readAsDataURL(file);
-            }
-        });
-        
-        // Seleção de tipo
-        typeOptions.forEach(option => {
-            option.addEventListener('click', function() {
-                typeOptions.forEach(opt => opt.classList.remove('selected'));
-                this.classList.add('selected');
-                gymTypeInput.value = this.getAttribute('data-type');
-            });
-        });
-        
-        // Seleção de facilidades
-        facilityOptions.forEach(option => {
-            option.addEventListener('click', function() {
-                this.classList.toggle('selected');
-                updateFacilitiesInput();
-            });
-        });
-        
-        // Salvar/Atualizar academia
-        btnSalvarAcademia.addEventListener('click', function() {
-            // Validação básica
-            const gymName = document.getElementById('gymName').value;
-            const gymCNPJ = document.getElementById('gymCNPJ').value;
-            const gymAddress = document.getElementById('gymAddress').value;
-            const gymOwner = document.getElementById('gymOwner');
-            const selectedOwner = gymOwner.options[gymOwner.selectedIndex].value;
-            const gymEmail = document.getElementById('gymEmail').value;
-            const gymPhone = document.getElementById('gymPhone').value;
-            const gymDescription = document.getElementById('gymDescription').value;
-            const gymStatus = document.getElementById('gymStatus').value;
-            const gymType = gymTypeInput.value;
-            const gymPriceValue = gymPrice.value;
-            const gymFacilities = gymFacilitiesInput.value.split(',').filter(f => f);
-            
-            if (!gymName || !gymCNPJ || !gymAddress || !selectedOwner || !gymPriceValue) {
-                showAlert('Por favor, preencha todos os campos obrigatórios (*)', 'error');
+            if (!academia) {
+                showAlert('Academia não encontrada!', 'error');
                 return;
             }
             
-            // Gerar URL da foto
-            let photoUrl = previewImage.src || getDefaultGymImage(gymType);
+            modalTitle.textContent = 'Editar Academia';
+            document.getElementById('academyId').value = academiaId;
+            document.getElementById('academiaNome').value = academia.nome;
+            document.getElementById('academiaCNPJ').value = academia.cnpj;
+            document.getElementById('academiaEmail').value = academia.email || '';
+            document.getElementById('academiaTelefone').value = academia.telefone || '';
+            document.getElementById('academiaTipo').value = academia.tipo;
+            document.getElementById('academiaEndereco').value = academia.endereco;
+            document.getElementById('academiaCidade').value = academia.cidade || '';
+            document.getElementById('academiaEstado').value = academia.estado || '';
+            document.getElementById('academiaPreco').value = academia.preco;
+            document.getElementById('academiaProprietario').value = academia.proprietario;
+            document.getElementById('academiaDescricao').value = academia.descricao || '';
+            document.getElementById('academiaAbertura').value = academia.abertura || '06:00';
+            document.getElementById('academiaFechamento').value = academia.fechamento || '22:00';
+            document.getElementById('academiaStatus').value = academia.status;
             
-            // Criar objeto com dados
-            const academyData = {
-                id: editingAcademyId || Date.now(),
-                name: gymName,
-                address: gymAddress,
-                type: gymType,
-                price: gymPriceValue,
-                status: gymStatus,
-                image: photoUrl,
-                owner: selectedOwner,
-                cnpj: gymCNPJ,
-                email: gymEmail,
-                phone: gymPhone,
-                city: document.getElementById('gymCity').value,
-                state: document.getElementById('gymState').value,
-                description: gymDescription,
-                schedule: {
-                    weekdays: document.getElementById('gymOpening').value + ' - ' + document.getElementById('gymClosing').value,
-                    weekend: '8h - 17h'
+            // Definir facilidades
+            const facilidades = academia.facilidades || [];
+            document.querySelectorAll('.facility-option').forEach(option => {
+                const facility = option.getAttribute('data-facility');
+                if (facilidades.includes(facility)) {
+                    option.classList.add('selected');
+                } else {
+                    option.classList.remove('selected');
+                }
+            });
+            document.getElementById('academiaFacilidades').value = facilidades.join(',');
+            
+            // Definir imagem
+            const previewImage = document.getElementById('academiaPreviewImage');
+            const previewIcon = document.querySelector('#academiaPhotoPreview i');
+            
+            if (academia.foto && academia.foto !== '') {
+                previewImage.src = academia.foto;
+                previewImage.style.display = 'block';
+                previewIcon.style.display = 'none';
+            } else {
+                previewImage.style.display = 'none';
+                previewIcon.style.display = 'block';
+            }
+        } else {
+            // Modo novo
+            modalTitle.textContent = 'Cadastrar Nova Academia';
+            document.getElementById('formAcademia').reset();
+            document.getElementById('academyId').value = '';
+            document.getElementById('academiaTipo').value = 'musculacao';
+            document.getElementById('academiaPreco').value = '60';
+            document.getElementById('academiaAbertura').value = '06:00';
+            document.getElementById('academiaFechamento').value = '22:00';
+            document.getElementById('academiaStatus').value = 'ativo';
+            
+            // Resetar facilidades
+            document.querySelectorAll('.facility-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            document.getElementById('academiaFacilidades').value = '';
+            
+            // Resetar imagem
+            const previewImage = document.getElementById('academiaPreviewImage');
+            const previewIcon = document.querySelector('#academiaPhotoPreview i');
+            previewImage.style.display = 'none';
+            previewIcon.style.display = 'block';
+        }
+        
+        // Atualizar select de proprietários
+        updateProprietariosSelect();
+        
+        modal.style.display = 'block';
+    }
+    
+    // Função para salvar/atualizar academia
+    function saveAcademia() {
+        const form = document.getElementById('formAcademia');
+        
+        // Validar campos obrigatórios
+        const nome = document.getElementById('academiaNome').value;
+        const cnpj = document.getElementById('academiaCNPJ').value;
+        const tipo = document.getElementById('academiaTipo').value;
+        const endereco = document.getElementById('academiaEndereco').value;
+        const preco = document.getElementById('academiaPreco').value;
+        const proprietario = document.getElementById('academiaProprietario').value;
+        const status = document.getElementById('academiaStatus').value;
+        
+        if (!nome || !cnpj || !tipo || !endereco || !preco || !proprietario || !status) {
+            showAlert('Por favor, preencha todos os campos obrigatórios!', 'error');
+            return;
+        }
+        
+        const academiaId = document.getElementById('academyId').value;
+        const isEditing = academiaId !== '';
+        
+        // Obter facilidades selecionadas
+        const facilidades = document.getElementById('academiaFacilidades').value.split(',').filter(f => f);
+        
+        // Obter URL da foto
+        const previewImage = document.getElementById('academiaPreviewImage');
+        const foto = previewImage.style.display === 'block' ? previewImage.src : '';
+        
+        const academiaData = {
+            id: isEditing ? parseInt(academiaId) : Date.now(),
+            nome: nome,
+            cnpj: cnpj,
+            email: document.getElementById('academiaEmail').value || '',
+            telefone: document.getElementById('academiaTelefone').value || '',
+            tipo: tipo,
+            endereco: endereco,
+            cidade: document.getElementById('academiaCidade').value || '',
+            estado: document.getElementById('academiaEstado').value || '',
+            preco: preco,
+            proprietario: proprietario,
+            descricao: document.getElementById('academiaDescricao').value || '',
+            facilidades: facilidades,
+            abertura: document.getElementById('academiaAbertura').value,
+            fechamento: document.getElementById('academiaFechamento').value,
+            status: status,
+            foto: foto,
+            dataCadastro: isEditing ? 
+                (getAcademiasFromStorage().find(a => a.id == academiaId)?.dataCadastro || new Date().toISOString()) : 
+                new Date().toISOString()
+        };
+        
+        let academias = getAcademiasFromStorage();
+        
+        if (isEditing) {
+            // Atualizar
+            const index = academias.findIndex(a => a.id == academiaId);
+            if (index !== -1) {
+                academias[index] = academiaData;
+            }
+        } else {
+            // Adicionar novo
+            academias.push(academiaData);
+        }
+        
+        saveAcademiasToStorage(academias);
+        
+        // Fechar modal
+        document.getElementById('modalAcademia').style.display = 'none';
+        form.reset();
+        
+        // Atualizar tabela
+        renderAcademiasTable();
+        
+        // Atualizar contador
+        updateAcademiasCount();
+        
+        showAlert(`Academia ${isEditing ? 'atualizada' : 'cadastrada'} com sucesso!`, 'success');
+    }
+    
+    // Função para excluir academia
+    function deleteAcademia(academiaId) {
+        const academias = getAcademiasFromStorage();
+        const academia = academias.find(a => a.id == academiaId);
+        
+        if (!academia) return;
+        
+        if (confirm(`Tem certeza que deseja excluir a academia "${academia.nome}"?`)) {
+            const updatedAcademias = academias.filter(a => a.id != academiaId);
+            saveAcademiasToStorage(updatedAcademias);
+            
+            // Atualizar tabela
+            renderAcademiasTable();
+            
+            // Atualizar contador
+            updateAcademiasCount();
+            
+            showAlert('Academia excluída com sucesso!', 'success');
+        }
+    }
+    
+    // Função para abrir modal de detalhes da academia
+    function openAcademiaDetailsModal(academiaId) {
+        const academias = getAcademiasFromStorage();
+        const academia = academias.find(a => a.id == academiaId);
+        
+        if (!academia) {
+            showAlert('Academia não encontrada!', 'error');
+            return;
+        }
+        
+        // Mapear status para português
+        const statusMap = {
+            'ativo': { text: 'Ativo', class: 'active' },
+            'inativo': { text: 'Inativo', class: 'inactive' },
+            'pendente': { text: 'Pendente', class: 'pending' }
+        };
+        
+        const status = statusMap[academia.status] || statusMap.ativo;
+        
+        // Mapear tipo para português
+        const tipoMap = {
+            'musculacao': 'Musculação',
+            'artes-marciais': 'Artes Marciais'
+        };
+        
+        const tipo = tipoMap[academia.tipo] || academia.tipo;
+        
+        // Mapear facilidades para ícones
+        const facilityIcons = {
+            'estacionamento': 'fas fa-parking',
+            'ar-condicionado': 'fas fa-snowflake',
+            'vestiario': 'fas fa-shower',
+            'wifi': 'fas fa-wifi',
+            'personais': 'fas fa-dumbbell',
+            'piscina': 'fas fa-swimming-pool'
+        };
+        
+        // Mapear facilidades para nomes em português
+        const facilityNames = {
+            'estacionamento': 'Estacionamento',
+            'ar-condicionado': 'Ar Condicionado',
+            'vestiario': 'Vestiário',
+            'wifi': 'Wi-Fi',
+            'personais': 'Personais',
+            'piscina': 'Piscina'
+        };
+        
+        const detailsContent = document.getElementById('detailsAcademiaContent');
+        detailsContent.innerHTML = `
+            <img src="${academia.foto || 'https://via.placeholder.com/800x200/545b67/ffffff?text=Academia'}" 
+                 class="gym-details-photo" 
+                 alt="${academia.nome}">
+            
+            <div class="details-grid">
+                <div class="details-item">
+                    <div class="details-label">Nome</div>
+                    <div class="details-value">${academia.nome}</div>
+                </div>
+                <div class="details-item">
+                    <div class="details-label">Tipo</div>
+                    <div class="details-value">${tipo}</div>
+                </div>
+                <div class="details-item">
+                    <div class="details-label">CNPJ</div>
+                    <div class="details-value">${academia.cnpj}</div>
+                </div>
+                <div class="details-item">
+                    <div class="details-label">Proprietário</div>
+                    <div class="details-value">${academia.proprietario}</div>
+                </div>
+                <div class="details-item">
+                    <div class="details-label">Endereço</div>
+                    <div class="details-value">${academia.endereco}</div>
+                </div>
+                <div class="details-item">
+                    <div class="details-label">Cidade/Estado</div>
+                    <div class="details-value">${academia.cidade || ''} ${academia.estado ? '/' + academia.estado : ''}</div>
+                </div>
+                <div class="details-item">
+                    <div class="details-label">Preço Mensal</div>
+                    <div class="details-value" style="color: var(--primary-green); font-weight: bold;">R$ ${academia.preco}/mês</div>
+                </div>
+                <div class="details-item">
+                    <div class="details-label">Status</div>
+                    <div class="details-value">
+                        <span class="status ${status.class}">${status.text}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="details-grid">
+                <div class="details-item">
+                    <div class="details-label">Contato</div>
+                    <div class="details-value">
+                        ${academia.email ? `<div><i class="fas fa-envelope"></i> ${academia.email}</div>` : ''}
+                        ${academia.telefone ? `<div style="margin-top: 5px;"><i class="fas fa-phone"></i> ${academia.telefone}</div>` : ''}
+                    </div>
+                </div>
+                <div class="details-item">
+                    <div class="details-label">Horário de Funcionamento</div>
+                    <div class="details-value">
+                        <div><strong>Abertura:</strong> ${academia.abertura || '06:00'}</div>
+                        <div><strong>Fechamento:</strong> ${academia.fechamento || '22:00'}</div>
+                    </div>
+                </div>
+            </div>
+            
+            ${academia.facilidades && academia.facilidades.length > 0 ? `
+            <div class="details-item">
+                <div class="details-label">Facilidades</div>
+                <div class="details-facilities">
+                    ${academia.facilidades.map(facility => `
+                        <div class="facility-badge">
+                            <i class="${facilityIcons[facility] || 'fas fa-check'}"></i>
+                            ${facilityNames[facility] || facility}
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+            ` : ''}
+            
+            ${academia.descricao ? `
+            <div class="details-item">
+                <div class="details-label">Descrição</div>
+                <div class="details-value">${academia.descricao}</div>
+            </div>
+            ` : ''}
+            
+            <div class="details-item">
+                <div class="details-label">Data de Cadastro</div>
+                <div class="details-value">${new Date(academia.dataCadastro).toLocaleDateString('pt-BR')}</div>
+            </div>
+        `;
+        
+        const modal = document.getElementById('modalDetalhesAcademia');
+        modal.style.display = 'block';
+    }
+    
+    // Inicializar academias com dados de exemplo
+    function initAcademias() {
+        if (getAcademiasFromStorage().length === 0) {
+            const exampleAcademias = [
+                {
+                    id: 1,
+                    nome: "Academia Fitness Plus",
+                    cnpj: "12.345.678/0001-90",
+                    email: "contato@fitnessplus.com",
+                    telefone: "(11) 98765-4321",
+                    tipo: "musculacao",
+                    endereco: "Rua das Flores, 123 - Centro",
+                    cidade: "São Paulo",
+                    estado: "SP",
+                    preco: "89.90",
+                    proprietario: "João Silva",
+                    descricao: "Academia completa com equipamentos modernos e pessoal qualificado.",
+                    facilidades: ["estacionamento", "ar-condicionado", "vestiario", "wifi", "personais"],
+                    abertura: "06:00",
+                    fechamento: "22:00",
+                    status: "ativo",
+                    foto: "https://via.placeholder.com/800x200/545b67/ffffff?text=Fitness+Plus",
+                    dataCadastro: "2024-01-15T10:00:00.000Z"
                 },
-                facilities: gymFacilities,
-                location: determineLocation(gymAddress),
-                createdAt: editingAcademyId ? getAcademyById(editingAcademyId)?.createdAt || new Date().toISOString() : new Date().toISOString(),
-                updatedAt: new Date().toISOString()
+                {
+                    id: 2,
+                    nome: "Power Gym",
+                    cnpj: "98.765.432/0001-10",
+                    email: "contato@powergym.com",
+                    telefone: "(21) 97654-3210",
+                    tipo: "musculacao",
+                    endereco: "Avenida Principal, 456 - Vila",
+                    cidade: "Rio de Janeiro",
+                    estado: "RJ",
+                    preco: "75.00",
+                    proprietario: "Maria Santos",
+                    descricao: "Academia focada em musculação e crossfit.",
+                    facilidades: ["estacionamento", "vestiario", "personais"],
+                    abertura: "05:00",
+                    fechamento: "23:00",
+                    status: "ativo",
+                    foto: "https://via.placeholder.com/800x200/545b67/ffffff?text=Power+Gym",
+                    dataCadastro: "2024-02-20T14:30:00.000Z"
+                },
+                {
+                    id: 3,
+                    nome: "Strong Academy",
+                    cnpj: "45.678.912/0001-30",
+                    email: "contato@strongacademy.com",
+                    telefone: "(31) 96543-2109",
+                    tipo: "artes-marciais",
+                    endereco: "Praça Central, 789 - Chapada",
+                    cidade: "Belo Horizonte",
+                    estado: "MG",
+                    preco: "120.00",
+                    proprietario: "Pedro Oliveira",
+                    descricao: "Academia especializada em artes marciais e defesa pessoal.",
+                    facilidades: ["ar-condicionado", "vestiario", "piscina"],
+                    abertura: "07:00",
+                    fechamento: "21:00",
+                    status: "pendente",
+                    foto: "https://via.placeholder.com/800x200/545b67/ffffff?text=Strong+Academy",
+                    dataCadastro: "2024-03-10T09:15:00.000Z"
+                }
+            ];
+            
+            saveAcademiasToStorage(exampleAcademias);
+        }
+        
+        renderAcademiasTable();
+        updateAcademiasCount();
+    }
+    
+    // ============================================
+    // SISTEMA DE PERSONAIS (simplificado)
+    // ============================================
+    
+    // Função para carregar personais do localStorage
+    function getPersonaisFromStorage() {
+        return JSON.parse(localStorage.getItem('gymPersonais')) || [];
+    }
+    
+    // Função para salvar personais no localStorage
+    function savePersonaisToStorage(personais) {
+        localStorage.setItem('gymPersonais', JSON.stringify(personais));
+    }
+    
+    // Função para atualizar contador de personais
+    function updatePersonaisCount() {
+        const personais = getPersonaisFromStorage();
+        document.getElementById('personaisCount').textContent = personais.length;
+    }
+    
+    // Função para renderizar personais na tabela
+    function renderPersonaisTable() {
+        const personais = getPersonaisFromStorage();
+        const tbody = document.getElementById('personaisTbody');
+        
+        if (personais.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="8" style="text-align: center; padding: 20px; color: var(--primary-gray-light);">
+                        Nenhum personal cadastrado
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+        
+        tbody.innerHTML = personais.map(personal => {
+            const statusMap = {
+                'ativo': 'active',
+                'inativo': 'inactive',
+                'pendente': 'pending'
             };
             
-            // Salvar no localStorage
-            saveAcademyToStorage(academyData);
+            const statusClass = statusMap[personal.status] || 'pending';
+            const statusText = personal.status.charAt(0).toUpperCase() + personal.status.slice(1);
             
-            // Recarregar tabela
-            loadAcademiesToTable();
-            
-            // Fechar modal
-            modal.style.display = 'none';
-            formAcademia.reset();
-            previewImage.style.display = 'none';
-            photoPreview.querySelector('i').style.display = 'block';
-            resetTypeSelector();
-            resetFacilitiesSelector();
-            editingAcademyId = null;
-            
-            // Mostrar mensagem
-            const message = editingAcademyId ? 'Academia atualizada com sucesso!' : 'Academia cadastrada com sucesso!';
-            showAlert(message, 'success');
+            return `
+                <tr data-id="${personal.id}">
+                    <td>${personal.nome}</td>
+                    <td>${personal.especialidade}</td>
+                    <td>${personal.anos} anos</td>
+                    <td>${personal.email}</td>
+                    <td>${personal.telefone}</td>
+                    <td>${personal.academia || 'Independente'}</td>
+                    <td><span class="status ${statusClass}">${statusText}</span></td>
+                    <td>
+                        <button class="action-btn btn-editar-personal" title="Editar" data-id="${personal.id}">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="action-btn btn-excluir-personal" title="Excluir" data-id="${personal.id}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `;
+        }).join('');
+        
+        // Adicionar eventos aos botões
+        addPersonalTableEvents();
+    }
+    
+    // Função para adicionar eventos aos botões da tabela de personais
+    function addPersonalTableEvents() {
+        // Botões de editar
+        document.querySelectorAll('.btn-editar-personal').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const personalId = this.getAttribute('data-id');
+                openEditPersonalModal(personalId);
+            });
         });
         
+        // Botões de excluir
+        document.querySelectorAll('.btn-excluir-personal').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const personalId = this.getAttribute('data-id');
+                deletePersonal(personalId);
+            });
+        });
+    }
+    
+    // Função para carregar academias no select do personal
+    function loadAcademiasForPersonal() {
+        const academias = getAcademiasFromStorage();
+        const select = document.getElementById('personalAcademia');
+        const currentValue = select.value;
+        
+        select.innerHTML = '<option value="">Nenhuma (Independente)</option>';
+        
+        academias.forEach(academia => {
+            const option = document.createElement('option');
+            option.value = academia.nome;
+            option.textContent = academia.nome;
+            select.appendChild(option);
+        });
+        
+        // Restaurar valor anterior
+        select.value = currentValue;
+    }
+    
+    // Função para abrir modal de edição do personal
+    function openEditPersonalModal(personalId = null) {
+        const modal = document.getElementById('modalPersonal');
+        const modalTitle = document.getElementById('modalPersonalTitle');
+        
+        if (personalId) {
+            // Modo edição
+            const personais = getPersonaisFromStorage();
+            const personal = personais.find(p => p.id == personalId);
+            
+            if (!personal) {
+                showAlert('Personal não encontrado!', 'error');
+                return;
+            }
+            
+            modalTitle.textContent = 'Editar Personal';
+            document.getElementById('personalId').value = personalId;
+            document.getElementById('personalNome').value = personal.nome;
+            document.getElementById('personalEmail').value = personal.email;
+            document.getElementById('personalTelefone').value = personal.telefone;
+            document.getElementById('personalEspecialidade').value = personal.especialidade;
+            document.getElementById('personalAnos').value = personal.anos;
+            document.getElementById('personalAcademia').value = personal.academia || '';
+            document.getElementById('personalDescricao').value = personal.descricao || '';
+            document.getElementById('personalStatus').value = personal.status;
+        } else {
+            // Modo novo
+            modalTitle.textContent = 'Cadastrar Novo Personal';
+            document.getElementById('formPersonal').reset();
+            document.getElementById('personalId').value = '';
+            document.getElementById('personalStatus').value = 'ativo';
+            document.getElementById('personalAnos').value = '3';
+        }
+        
+        // Carregar academias
+        loadAcademiasForPersonal();
+        
+        modal.style.display = 'block';
+    }
+    
+    // Função para salvar/atualizar personal
+    function savePersonal() {
+        const form = document.getElementById('formPersonal');
+        
+        // Validar campos obrigatórios
+        const nome = document.getElementById('personalNome').value;
+        const email = document.getElementById('personalEmail').value;
+        const telefone = document.getElementById('personalTelefone').value;
+        const especialidade = document.getElementById('personalEspecialidade').value;
+        const anos = document.getElementById('personalAnos').value;
+        const status = document.getElementById('personalStatus').value;
+        
+        if (!nome || !email || !telefone || !especialidade || !anos || !status) {
+            showAlert('Por favor, preencha todos os campos obrigatórios!', 'error');
+            return;
+        }
+        
+        const personalId = document.getElementById('personalId').value;
+        const isEditing = personalId !== '';
+        
+        const personalData = {
+            id: isEditing ? parseInt(personalId) : Date.now(),
+            nome: nome,
+            email: email,
+            telefone: telefone,
+            especialidade: especialidade,
+            anos: anos,
+            academia: document.getElementById('personalAcademia').value || '',
+            descricao: document.getElementById('personalDescricao').value || '',
+            status: status,
+            dataCadastro: new Date().toISOString()
+        };
+        
+        let personais = getPersonaisFromStorage();
+        
+        if (isEditing) {
+            // Atualizar
+            const index = personais.findIndex(p => p.id == personalId);
+            if (index !== -1) {
+                personais[index] = personalData;
+            }
+        } else {
+            // Adicionar novo
+            personais.push(personalData);
+        }
+        
+        savePersonaisToStorage(personais);
+        
+        // Fechar modal
+        document.getElementById('modalPersonal').style.display = 'none';
+        form.reset();
+        
+        // Atualizar tabela
+        renderPersonaisTable();
+        
+        // Atualizar contador
+        updatePersonaisCount();
+        
+        showAlert(`Personal ${isEditing ? 'atualizado' : 'cadastrado'} com sucesso!`, 'success');
+    }
+    
+    // Função para excluir personal
+    function deletePersonal(personalId) {
+        const personais = getPersonaisFromStorage();
+        const personal = personais.find(p => p.id == personalId);
+        
+        if (!personal) return;
+        
+        if (confirm(`Tem certeza que deseja excluir o personal "${personal.nome}"?`)) {
+            const updatedPersonais = personais.filter(p => p.id != personalId);
+            savePersonaisToStorage(updatedPersonais);
+            
+            // Atualizar tabela
+            renderPersonaisTable();
+            
+            // Atualizar contador
+            updatePersonaisCount();
+            
+            showAlert('Personal excluído com sucesso!', 'success');
+        }
+    }
+    
+    // Inicializar personais com dados de exemplo
+    function initPersonais() {
+        if (getPersonaisFromStorage().length === 0) {
+            const examplePersonais = [
+                {
+                    id: 1,
+                    nome: "Carlos Silva",
+                    email: "carlos@email.com",
+                    telefone: "(11) 99999-9999",
+                    especialidade: "Musculação",
+                    anos: "5",
+                    academia: "Academia Fitness Plus",
+                    descricao: "Especialista em treinamento funcional",
+                    status: "ativo",
+                    dataCadastro: "2024-01-15T10:00:00.000Z"
+                },
+                {
+                    id: 2,
+                    nome: "Ana Santos",
+                    email: "ana@email.com",
+                    telefone: "(11) 98888-8888",
+                    especialidade: "Emagrecimento",
+                    anos: "3",
+                    academia: "",
+                    descricao: "Foco em emagrecimento saudável",
+                    status: "pendente",
+                    dataCadastro: "2024-03-14T09:15:00.000Z"
+                },
+                {
+                    id: 3,
+                    nome: "Roberto Lima",
+                    email: "roberto@email.com",
+                    telefone: "(11) 97777-7777",
+                    especialidade: "Crossfit",
+                    anos: "8",
+                    academia: "Power Gym",
+                    descricao: "Especializado em crossfit",
+                    status: "ativo",
+                    dataCadastro: "2024-02-20T16:45:00.000Z"
+                }
+            ];
+            
+            savePersonaisToStorage(examplePersonais);
+        }
+        
+        renderPersonaisTable();
+        updatePersonaisCount();
+    }
+    
+    // ============================================
+    // INICIALIZAÇÃO E EVENT LISTENERS
+    // ============================================
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        // Inicializar sistemas
+        initProprietarios();
+        initAcademias();
+        initPersonais();
+        
         // ============================================
-        // NAVEGAÇÃO ENTRO TABS
+        // EVENT LISTENERS GERAIS
         // ============================================
         
-        // Tab navigation functionality
+        // Navegação entre tabs
         const navLinks = document.querySelectorAll('.nav-links li');
         const cards = document.querySelectorAll('.dashboard-cards .card');
         const sections = document.querySelectorAll('.section');
@@ -2159,7 +2851,7 @@
                 }
             });
             
-            // Update active nav link
+            // Atualizar link ativo
             navLinks.forEach(link => {
                 if (link.getAttribute('data-tab') === sectionId) {
                     link.classList.add('active');
@@ -2167,14 +2859,9 @@
                     link.classList.remove('active');
                 }
             });
-            
-            // Se for a seção de proprietários, carregar a tabela
-            if (sectionId === 'proprietarios') {
-                loadOwnersToTable();
-            }
         }
         
-        // Add click event to nav links
+        // Adicionar eventos de navegação
         navLinks.forEach(link => {
             link.addEventListener('click', function() {
                 const tab = this.getAttribute('data-tab');
@@ -2184,7 +2871,6 @@
             });
         });
         
-        // Add click event to cards
         cards.forEach(card => {
             card.addEventListener('click', function() {
                 const tab = this.getAttribute('data-tab');
@@ -2195,33 +2881,150 @@
         });
         
         // ============================================
-        // FUNCIONALIDADE DE BUSCA
+        // EVENT LISTENERS PARA ACADEMIAS
         // ============================================
         
-        const searchInput = document.getElementById('searchInput');
-        searchInput.addEventListener('input', function() {
-            const searchTerm = this.value.toLowerCase();
-            const activeSection = document.querySelector('.section[style="display: block;"]');
-            
-            if (activeSection) {
-                const rows = activeSection.querySelectorAll('tbody tr');
-                rows.forEach(row => {
-                    const text = row.textContent.toLowerCase();
-                    if (text.includes(searchTerm)) {
-                        row.style.display = '';
-                    } else {
-                        row.style.display = 'none';
-                    }
-                });
+        // Botão nova academia
+        document.getElementById('btnNovaAcademia').addEventListener('click', () => openEditAcademiaModal());
+        
+        // Botão salvar academia
+        document.getElementById('btnSalvarAcademia').addEventListener('click', saveAcademia);
+        
+        // Botão cancelar academia
+        document.getElementById('btnCancelarAcademia').addEventListener('click', () => {
+            document.getElementById('modalAcademia').style.display = 'none';
+            document.getElementById('formAcademia').reset();
+        });
+        
+        // Upload de foto da academia
+        document.getElementById('uploadAcademiaPhotoBtn').addEventListener('click', () => {
+            document.getElementById('academiaPhoto').click();
+        });
+        
+        document.getElementById('academiaPhoto').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const previewImage = document.getElementById('academiaPreviewImage');
+                    const previewIcon = document.querySelector('#academiaPhotoPreview i');
+                    previewImage.src = e.target.result;
+                    previewImage.style.display = 'block';
+                    previewIcon.style.display = 'none';
+                };
+                reader.readAsDataURL(file);
             }
+        });
+        
+        // Facilidades da academia
+        document.querySelectorAll('.facility-option').forEach(option => {
+            option.addEventListener('click', function() {
+                this.classList.toggle('selected');
+                updateFacilitiesInput();
+            });
+        });
+        
+        function updateFacilitiesInput() {
+            const selectedFacilities = [];
+            document.querySelectorAll('.facility-option.selected').forEach(option => {
+                selectedFacilities.push(option.getAttribute('data-facility'));
+            });
+            document.getElementById('academiaFacilidades').value = selectedFacilities.join(',');
+        }
+        
+        // ============================================
+        // EVENT LISTENERS PARA PROPRIETÁRIOS
+        // ============================================
+        
+        // Botão novo proprietário
+        document.getElementById('btnNovoProprietario').addEventListener('click', () => openEditProprietarioModal());
+        
+        // Botão salvar proprietário
+        document.getElementById('btnSalvarProprietario').addEventListener('click', saveProprietario);
+        
+        // Botão cancelar proprietário
+        document.getElementById('btnCancelarProprietario').addEventListener('click', () => {
+            document.getElementById('modalProprietario').style.display = 'none';
+            document.getElementById('formProprietario').reset();
+        });
+        
+        // Upload de foto do proprietário
+        document.getElementById('uploadProprietarioPhotoBtn').addEventListener('click', () => {
+            document.getElementById('proprietarioPhoto').click();
+        });
+        
+        document.getElementById('proprietarioPhoto').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const previewImage = document.getElementById('proprietarioPreviewImage');
+                    const previewIcon = document.querySelector('#proprietarioPhotoPreview i');
+                    previewImage.src = e.target.result;
+                    previewImage.style.display = 'block';
+                    previewIcon.style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        // ============================================
+        // EVENT LISTENERS PARA PERSONAIS
+        // ============================================
+        
+        // Botão novo personal
+        document.getElementById('btnNovoPersonal').addEventListener('click', () => openEditPersonalModal());
+        
+        // Botão salvar personal
+        document.getElementById('btnSalvarPersonal').addEventListener('click', savePersonal);
+        
+        // Botão cancelar personal
+        document.getElementById('btnCancelarPersonal').addEventListener('click', () => {
+            document.getElementById('modalPersonal').style.display = 'none';
+            document.getElementById('formPersonal').reset();
+        });
+        
+        // ============================================
+        // FECHAR MODAIS
+        // ============================================
+        
+        // Fechar todos os modais ao clicar no X
+        document.querySelectorAll('.close-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const modal = this.closest('.modal');
+                modal.style.display = 'none';
+            });
+        });
+        
+        // Fechar modais ao clicar fora
+        window.addEventListener('click', function(event) {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        });
+        
+        // Botões fechar detalhes
+        document.getElementById('btnFecharDetalhesAcademia')?.addEventListener('click', () => {
+            document.getElementById('modalDetalhesAcademia').style.display = 'none';
+        });
+        
+        document.getElementById('btnFecharDetalhesProprietario')?.addEventListener('click', () => {
+            document.getElementById('modalDetalhesProprietario').style.display = 'none';
+        });
+        
+        document.getElementById('btnFecharDetalhesPersonal')?.addEventListener('click', () => {
+            document.getElementById('modalDetalhesPersonal').style.display = 'none';
         });
         
         // ============================================
         // FORMATAÇÃO DE CAMPOS
         // ============================================
         
-        // Format CNPJ input
-        document.getElementById('gymCNPJ').addEventListener('input', function(e) {
+        // Formatar CNPJ
+        document.getElementById('academiaCNPJ')?.addEventListener('input', function(e) {
             let value = e.target.value.replace(/\D/g, '');
             
             if (value.length <= 14) {
@@ -2233,549 +3036,78 @@
             }
         });
         
-        // Format phone input
-        document.getElementById('gymPhone').addEventListener('input', function(e) {
+        // Formatar CPF
+        document.getElementById('proprietarioCPF')?.addEventListener('input', function(e) {
             let value = e.target.value.replace(/\D/g, '');
             
             if (value.length <= 11) {
-                if (value.length <= 10) {
-                    value = value.replace(/^(\d{2})(\d)/, '($1) $2');
-                    value = value.replace(/(\d{4})(\d)/, '$1-$2');
-                } else {
-                    value = value.replace(/^(\d{2})(\d)/, '($1) $2');
-                    value = value.replace(/(\d{5})(\d)/, '$1-$2');
-                }
+                value = value.replace(/(\d{3})(\d)/, '$1.$2');
+                value = value.replace(/(\d{3})(\d)/, '$1.$2');
+                value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
                 e.target.value = value;
             }
         });
         
-        // Format price input
-        document.getElementById('gymPrice').addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\D/g, '');
-            if (value === '') value = '0';
-            e.target.value = value;
+        // Formatar telefone
+        const telefoneFields = [
+            document.getElementById('academiaTelefone'),
+            document.getElementById('proprietarioTelefone'),
+            document.getElementById('personalTelefone')
+        ];
+        
+        telefoneFields.forEach(field => {
+            if (field) {
+                field.addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\D/g, '');
+                    
+                    if (value.length <= 11) {
+                        if (value.length <= 10) {
+                            value = value.replace(/^(\d{2})(\d)/, '($1) $2');
+                            value = value.replace(/(\d{4})(\d)/, '$1-$2');
+                        } else {
+                            value = value.replace(/^(\d{2})(\d)/, '($1) $2');
+                            value = value.replace(/(\d{5})(\d)/, '$1-$2');
+                        }
+                        e.target.value = value;
+                    }
+                });
+            }
         });
         
         // ============================================
-        // INICIALIZAÇÃO
+        // BUSCA EM TEMPO REAL
         // ============================================
+        
+        // Busca geral
+        document.getElementById('searchInput')?.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const activeSection = document.querySelector('.section[style="display: block;"]');
+            
+            if (activeSection) {
+                const rows = activeSection.querySelectorAll('tbody tr');
+                rows.forEach(row => {
+                    const text = row.textContent.toLowerCase();
+                    row.style.display = text.includes(searchTerm) ? '' : 'none';
+                });
+            }
+        });
+        
+        // Busca específica para proprietários
+        document.getElementById('searchProprietario')?.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const rows = document.querySelectorAll('#proprietariosTbody tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        });
         
         // Mostrar seção de academias por padrão
         showSection('academias');
         
-        // Carregar academias existentes
-        loadAcademiesToTable();
-        
-        // Inicializar selectores
-        resetTypeSelector();
-        resetFacilitiesSelector();
-        
-        // Adicionar dados iniciais se não existirem
-        setTimeout(() => {
-            const academies = JSON.parse(localStorage.getItem('gymAcademies')) || [];
-            if (academies.length === 0) {
-                // Adicionar alguns dados de exemplo
-                const exampleAcademies = [
-                    {
-                        id: 1,
-                        name: 'Academia Fitness Plus',
-                        address: 'Rua das Flores, 123 - Centro, São Paulo - SP',
-                        type: 'musculacao',
-                        price: '89.90',
-                        status: 'active',
-                        image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400&h=250&fit=crop&q=80',
-                        owner: 'João Silva',
-                        cnpj: '12.345.678/0001-90',
-                        email: 'contato@fitnessplus.com',
-                        phone: '(11) 98765-4321',
-                        city: 'São Paulo',
-                        state: 'SP',
-                        description: 'Academia completa com equipamentos modernos e pessoal qualificado.',
-                        schedule: {
-                            weekdays: '06:00 - 22:00',
-                            weekend: '08:00 - 17:00'
-                        },
-                        facilities: ['estacionamento', 'ar-condicionado', 'vestiario', 'wifi', 'personais'],
-                        location: 'centro',
-                        createdAt: '2024-01-15T10:00:00.000Z'
-                    },
-                    {
-                        id: 2,
-                        name: 'Power Gym',
-                        address: 'Avenida Principal, 456 - Vila, Rio de Janeiro - RJ',
-                        type: 'musculacao',
-                        price: '75.00',
-                        status: 'active',
-                        image: 'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=400&h=250&fit=crop&q=80',
-                        owner: 'Maria Santos',
-                        cnpj: '98.765.432/0001-10',
-                        email: 'contato@powergym.com',
-                        phone: '(21) 97654-3210',
-                        city: 'Rio de Janeiro',
-                        state: 'RJ',
-                        description: 'Academia focada em musculação e crossfit.',
-                        schedule: {
-                            weekdays: '05:00 - 23:00',
-                            weekend: '07:00 - 19:00'
-                        },
-                        facilities: ['estacionamento', 'vestiario', 'personais'],
-                        location: 'vila-kolping',
-                        createdAt: '2024-02-20T14:30:00.000Z'
-                    },
-                    {
-                        id: 3,
-                        name: 'Strong Academy',
-                        address: 'Praça Central, 789 - Chapada, Belo Horizonte - MG',
-                        type: 'artes-marciais',
-                        price: '120.00',
-                        status: 'pending',
-                        image: 'https://images.unsplash.com/photo-1549060279-7e168fce7090?w=400&h=250&fit=crop&q=80',
-                        owner: 'Pedro Oliveira',
-                        cnpj: '45.678.912/0001-30',
-                        email: 'contato@strongacademy.com',
-                        phone: '(31) 96543-2109',
-                        city: 'Belo Horizonte',
-                        state: 'MG',
-                        description: 'Academia especializada em artes marciais e defesa pessoal.',
-                        schedule: {
-                            weekdays: '07:00 - 21:00',
-                            weekend: '09:00 - 16:00'
-                        },
-                        facilities: ['ar-condicionado', 'vestiario', 'piscina'],
-                        location: 'chapada-serra',
-                        createdAt: '2024-03-10T09:15:00.000Z'
-                    }
-                ];
-                
-                localStorage.setItem('gymAcademies', JSON.stringify(exampleAcademies));
-                loadAcademiesToTable();
-            }
-            
-            // Adicionar proprietários de exemplo se não existirem
-            const owners = getAllOwners();
-            if (owners.length === 0) {
-                const exampleOwners = [
-                    {
-                        id: 1,
-                        name: 'João Silva',
-                        email: 'joao@email.com',
-                        cpf: '123.456.789-00',
-                        phone: '(11) 98765-4321',
-                        address: 'Rua das Flores, 123',
-                        city: 'São Paulo',
-                        state: 'SP',
-                        description: 'Proprietário da Academia Fitness Plus',
-                        status: 'active',
-                        photo: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&q=80',
-                        createdAt: '2024-01-15T10:00:00.000Z'
-                    },
-                    {
-                        id: 2,
-                        name: 'Maria Santos',
-                        email: 'maria@email.com',
-                        cpf: '987.654.321-00',
-                        phone: '(21) 97654-3210',
-                        address: 'Avenida Principal, 456',
-                        city: 'Rio de Janeiro',
-                        state: 'RJ',
-                        description: 'Proprietária da Power Gym',
-                        status: 'active',
-                        photo: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&q=80',
-                        createdAt: '2024-02-20T14:30:00.000Z'
-                    },
-                    {
-                        id: 3,
-                        name: 'Pedro Oliveira',
-                        email: 'pedro@email.com',
-                        cpf: '456.789.123-00',
-                        phone: '(31) 96543-2109',
-                        address: 'Praça Central, 789',
-                        city: 'Belo Horizonte',
-                        state: 'MG',
-                        description: 'Proprietário da Strong Academy',
-                        status: 'active',
-                        photo: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&q=80',
-                        createdAt: '2024-03-10T09:15:00.000Z'
-                    }
-                ];
-                
-                exampleOwners.forEach(owner => saveOwnerToStorage(owner));
-            }
-        }, 100);
+        console.log('✅ Sistema de proprietários inicializado com sucesso!');
     });
-    
-    // ============================================
-    // SISTEMA DE PROPRIETÁRIOS - FUNCIONALIDADES
-    // ============================================
-    
-    let editingOwnerId = null;
-    
-    // Função para abrir modal de novo proprietário
-    function openNewOwnerModal() {
-        editingOwnerId = null;
-        document.getElementById('modalOwnerTitle').textContent = 'Cadastrar Novo Proprietário';
-        document.getElementById('btnSalvarProprietario').textContent = 'Salvar Proprietário';
-        document.getElementById('formProprietario').reset();
-        document.getElementById('ownerPhotoPreview').querySelector('i').style.display = 'block';
-        document.getElementById('ownerPreviewImage').style.display = 'none';
-        document.getElementById('ownerPhotoPreview').querySelector('i').className = 'fas fa-camera';
-        document.getElementById('modalProprietario').style.display = 'block';
-    }
-    
-    // Função para abrir modal de edição de proprietário
-    function openEditOwnerModal(ownerId) {
-        const owner = getOwnerById(ownerId);
-        if (!owner) {
-            showAlert('Proprietário não encontrado!', 'error');
-            return;
-        }
-        
-        editingOwnerId = ownerId;
-        document.getElementById('modalOwnerTitle').textContent = 'Editar Proprietário';
-        document.getElementById('btnSalvarProprietario').textContent = 'Atualizar Proprietário';
-        
-        document.getElementById('ownerName').value = owner.name;
-        document.getElementById('ownerEmail').value = owner.email;
-        document.getElementById('ownerPhone').value = owner.phone || '';
-        document.getElementById('ownerCPF').value = owner.cpf || '';
-        document.getElementById('ownerAddress').value = owner.address || '';
-        document.getElementById('ownerCity').value = owner.city || '';
-        document.getElementById('ownerState').value = owner.state || '';
-        document.getElementById('ownerDescription').value = owner.description || '';
-        document.getElementById('ownerStatus').value = owner.status || 'active';
-        document.getElementById('ownerId').value = ownerId;
-        
-        if (owner.photo && owner.photo !== '') {
-            document.getElementById('ownerPreviewImage').src = owner.photo;
-            document.getElementById('ownerPreviewImage').style.display = 'block';
-            document.getElementById('ownerPhotoPreview').querySelector('i').style.display = 'none';
-        } else {
-            document.getElementById('ownerPreviewImage').style.display = 'none';
-            document.getElementById('ownerPhotoPreview').querySelector('i').style.display = 'block';
-        }
-        
-        document.getElementById('modalProprietario').style.display = 'block';
-    }
-    
-    // Função para abrir modal de detalhes do proprietário
-    function openOwnerDetailsModal(ownerId) {
-        const owner = getOwnerById(ownerId);
-        if (!owner) {
-            showAlert('Proprietário não encontrado!', 'error');
-            return;
-        }
-        
-        const statusMap = {
-            'active': 'Ativo',
-            'inactive': 'Inativo',
-            'pending': 'Pendente'
-        };
-        
-        const detailsContent = document.getElementById('ownerDetailsContent');
-        detailsContent.innerHTML = `
-            <div style="text-align: center; margin-bottom: 20px;">
-                ${owner.photo ? `<img src="${owner.photo}" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary-green);">` : 
-                  `<div style="width: 150px; height: 150px; border-radius: 50%; background-color: var(--primary-gray); display: inline-flex; align-items: center; justify-content: center; border: 3px solid var(--primary-green);">
-                    <i class="fas fa-user" style="font-size: 4rem; color: var(--primary-green);"></i>
-                   </div>`}
-            </div>
-            
-            <div class="details-grid">
-                <div class="details-item">
-                    <div class="details-label">Nome</div>
-                    <div class="details-value">${owner.name}</div>
-                </div>
-                <div class="details-item">
-                    <div class="details-label">Email</div>
-                    <div class="details-value">${owner.email}</div>
-                </div>
-                <div class="details-item">
-                    <div class="details-label">CPF</div>
-                    <div class="details-value">${owner.cpf || 'Não informado'}</div>
-                </div>
-                <div class="details-item">
-                    <div class="details-label">Telefone</div>
-                    <div class="details-value">${owner.phone || 'Não informado'}</div>
-                </div>
-                <div class="details-item">
-                    <div class="details-label">Endereço</div>
-                    <div class="details-value">${owner.address || 'Não informado'}</div>
-                </div>
-                <div class="details-item">
-                    <div class="details-label">Cidade/Estado</div>
-                    <div class="details-value">${owner.city || ''} ${owner.state ? '/' + owner.state : ''}</div>
-                </div>
-                <div class="details-item">
-                    <div class="details-label">Status</div>
-                    <div class="details-value">
-                        <span class="status ${owner.status === 'active' ? 'active' : owner.status === 'inactive' ? 'inactive' : 'pending'}">
-                            ${statusMap[owner.status] || 'Ativo'}
-                        </span>
-                    </div>
-                </div>
-                <div class="details-item">
-                    <div class="details-label">Data de Cadastro</div>
-                    <div class="details-value">${new Date(owner.createdAt).toLocaleDateString('pt-BR')}</div>
-                </div>
-            </div>
-            
-            ${owner.description ? `
-            <div class="details-item">
-                <div class="details-label">Descrição</div>
-                <div class="details-value">${owner.description}</div>
-            </div>
-            ` : ''}
-        `;
-        
-        document.getElementById('modalOwnerDetalhes').style.display = 'block';
-    }
-    
-    // Carregar proprietários na tabela
-    function loadOwnersToTable() {
-        const owners = getAllOwners();
-        const ownersTableBody = document.getElementById('ownersTableBody');
-        
-        ownersTableBody.innerHTML = '';
-        
-        if (owners.length > 0) {
-            owners.forEach(owner => {
-                const statusText = owner.status === 'active' ? 'Ativo' : 
-                                 owner.status === 'inactive' ? 'Inativo' : 'Pendente';
-                
-                const newRow = document.createElement('tr');
-                newRow.setAttribute('data-id', owner.id);
-                newRow.innerHTML = `
-                    <td><img src="${owner.photo || getDefaultOwnerImage()}" class="owner-photo-table" alt="${owner.name}"></td>
-                    <td>${owner.name}</td>
-                    <td>${owner.email}</td>
-                    <td>${owner.phone || 'Não informado'}</td>
-                    <td>${owner.cpf || 'Não informado'}</td>
-                    <td><span class="status ${owner.status === 'active' ? 'active' : owner.status === 'inactive' ? 'inactive' : 'pending'}">${statusText}</span></td>
-                    <td>${new Date(owner.createdAt).toLocaleDateString('pt-BR')}</td>
-                    <td>
-                        <button class="action-btn btn-detalhes-owner" title="Detalhes" data-id="${owner.id}"><i class="fas fa-eye"></i></button>
-                        <button class="action-btn btn-editar-owner" title="Editar" data-id="${owner.id}"><i class="fas fa-edit"></i></button>
-                        <button class="action-btn btn-excluir-owner" title="Excluir" data-id="${owner.id}"><i class="fas fa-trash"></i></button>
-                    </td>
-                `;
-                ownersTableBody.appendChild(newRow);
-            });
-            
-            addOwnerTableEvents();
-        } else {
-            ownersTableBody.innerHTML = `
-                <tr>
-                    <td colspan="8" style="text-align: center; padding: 40px;">
-                        <i class="fas fa-users" style="font-size: 3rem; color: var(--primary-gray-light); margin-bottom: 15px; display: block;"></i>
-                        <p style="color: var(--primary-gray-light);">Nenhum proprietário cadastrado</p>
-                        <button class="btn btn-primary" onclick="openNewOwnerModal()" style="margin-top: 15px;">
-                            <i class="fas fa-plus"></i> Cadastrar Primeiro Proprietário
-                        </button>
-                    </td>
-                </tr>
-            `;
-        }
-    }
-    
-    // Adicionar eventos aos botões da tabela de proprietários
-    function addOwnerTableEvents() {
-        // Botões de detalhes
-        document.querySelectorAll('.btn-detalhes-owner').forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                const ownerId = parseInt(this.getAttribute('data-id'));
-                openOwnerDetailsModal(ownerId);
-            });
-        });
-        
-        // Botões de editar
-        document.querySelectorAll('.btn-editar-owner').forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                const ownerId = parseInt(this.getAttribute('data-id'));
-                openEditOwnerModal(ownerId);
-            });
-        });
-        
-        // Botões de excluir
-        document.querySelectorAll('.btn-excluir-owner').forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                const ownerId = parseInt(this.getAttribute('data-id'));
-                const owner = getOwnerById(ownerId);
-                
-                if (owner && confirm(`Tem certeza que deseja excluir o proprietário "${owner.name}"?`)) {
-                    const row = this.closest('tr');
-                    row.remove();
-                    removeOwnerFromStorage(ownerId);
-                    loadOwnersToTable();
-                    showAlert('Proprietário excluído com sucesso!', 'success');
-                }
-            });
-        });
-    }
-    
-    // Inicializar modal de proprietário quando DOM carregar
-    document.addEventListener('DOMContentLoaded', function() {
-        // Botão "Novo Proprietário"
-        const btnNovoProprietario = document.getElementById('btnNovoProprietario');
-        if (btnNovoProprietario) {
-            btnNovoProprietario.addEventListener('click', openNewOwnerModal);
-        }
-        
-        // Elementos do modal de proprietário
-        const ownerModal = document.getElementById('modalProprietario');
-        const ownerDetailsModal = document.getElementById('modalOwnerDetalhes');
-        const btnSalvarProprietario = document.getElementById('btnSalvarProprietario');
-        const btnCancelarProprietario = document.getElementById('btnCancelarProprietario');
-        const btnFecharDetalhesProprietario = document.getElementById('btnFecharDetalhesProprietario');
-        const uploadOwnerPhotoBtn = document.getElementById('uploadOwnerPhotoBtn');
-        const ownerPhotoInput = document.getElementById('ownerPhoto');
-        const ownerPreviewImage = document.getElementById('ownerPreviewImage');
-        
-        // Fechar modais
-        if (ownerModal) {
-            document.querySelectorAll('#modalProprietario .close-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    ownerModal.style.display = 'none';
-                });
-            });
-            
-            if (btnCancelarProprietario) {
-                btnCancelarProprietario.addEventListener('click', function() {
-                    ownerModal.style.display = 'none';
-                });
-            }
-            
-            window.addEventListener('click', function(event) {
-                if (event.target === ownerModal) {
-                    ownerModal.style.display = 'none';
-                }
-            });
-        }
-        
-        if (ownerDetailsModal) {
-            document.querySelectorAll('#modalOwnerDetalhes .close-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    ownerDetailsModal.style.display = 'none';
-                });
-            });
-            
-            if (btnFecharDetalhesProprietario) {
-                btnFecharDetalhesProprietario.addEventListener('click', function() {
-                    ownerDetailsModal.style.display = 'none';
-                });
-            }
-            
-            window.addEventListener('click', function(event) {
-                if (event.target === ownerDetailsModal) {
-                    ownerDetailsModal.style.display = 'none';
-                }
-            });
-        }
-        
-        // Upload de foto do proprietário
-        if (uploadOwnerPhotoBtn && ownerPhotoInput) {
-            uploadOwnerPhotoBtn.addEventListener('click', function() {
-                ownerPhotoInput.click();
-            });
-            
-            ownerPhotoInput.addEventListener('change', function() {
-                const file = this.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        ownerPreviewImage.src = e.target.result;
-                        ownerPreviewImage.style.display = 'block';
-                        document.getElementById('ownerPhotoPreview').querySelector('i').style.display = 'none';
-                    }
-                    reader.readAsDataURL(file);
-                }
-            });
-        }
-        
-        // Salvar proprietário
-        if (btnSalvarProprietario) {
-            btnSalvarProprietario.addEventListener('click', function() {
-                const ownerName = document.getElementById('ownerName').value;
-                const ownerEmail = document.getElementById('ownerEmail').value;
-                const ownerCPF = document.getElementById('ownerCPF').value;
-                const ownerPhone = document.getElementById('ownerPhone').value;
-                const ownerAddress = document.getElementById('ownerAddress').value;
-                const ownerCity = document.getElementById('ownerCity').value;
-                const ownerState = document.getElementById('ownerState').value;
-                const ownerDescription = document.getElementById('ownerDescription').value;
-                const ownerStatus = document.getElementById('ownerStatus').value;
-                const ownerPhotoSrc = ownerPreviewImage.src || getDefaultOwnerImage();
-                
-                if (!ownerName || !ownerEmail || !ownerCPF) {
-                    showAlert('Por favor, preencha todos os campos obrigatórios (*)', 'error');
-                    return;
-                }
-                
-                const ownerData = {
-                    id: editingOwnerId || Date.now(),
-                    name: ownerName,
-                    email: ownerEmail,
-                    cpf: ownerCPF,
-                    phone: ownerPhone,
-                    address: ownerAddress,
-                    city: ownerCity,
-                    state: ownerState,
-                    description: ownerDescription,
-                    status: ownerStatus,
-                    photo: ownerPhotoSrc,
-                    createdAt: editingOwnerId ? getOwnerById(editingOwnerId)?.createdAt || new Date().toISOString() : new Date().toISOString(),
-                    updatedAt: new Date().toISOString()
-                };
-                
-                saveOwnerToStorage(ownerData);
-                loadOwnersToTable();
-                
-                ownerModal.style.display = 'none';
-                document.getElementById('formProprietario').reset();
-                ownerPreviewImage.style.display = 'none';
-                document.getElementById('ownerPhotoPreview').querySelector('i').style.display = 'block';
-                editingOwnerId = null;
-                
-                const message = editingOwnerId ? 'Proprietário atualizado com sucesso!' : 'Proprietário cadastrado com sucesso!';
-                showAlert(message, 'success');
-            });
-        }
-        
-        // Formatar CPF
-        const cpfInput = document.getElementById('ownerCPF');
-        if (cpfInput) {
-            cpfInput.addEventListener('input', function(e) {
-                let value = e.target.value.replace(/\D/g, '');
-                if (value.length <= 11) {
-                    value = value.replace(/^(\d{3})(\d)/, '$1.$2');
-                    value = value.replace(/^(\d{3})\.(\d{3})(\d)/, '$1.$2.$3');
-                    value = value.replace(/\.(\d{3})(\d)/, '.$1-$2');
-                    e.target.value = value;
-                }
-            });
-        }
-        
-        // Formatar telefone do proprietário
-        const ownerPhoneInput = document.getElementById('ownerPhone');
-        if (ownerPhoneInput) {
-            ownerPhoneInput.addEventListener('input', function(e) {
-                let value = e.target.value.replace(/\D/g, '');
-                
-                if (value.length <= 11) {
-                    if (value.length <= 10) {
-                        value = value.replace(/^(\d{2})(\d)/, '($1) $2');
-                        value = value.replace(/(\d{4})(\d)/, '$1-$2');
-                    } else {
-                        value = value.replace(/^(\d{2})(\d)/, '($1) $2');
-                        value = value.replace(/(\d{5})(\d)/, '$1-$2');
-                    }
-                    e.target.value = value;
-                }
-            });
-        }
-    });
-</script>
+    </script>
 </body>
 </html>
