@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -3023,7 +3024,6 @@
                 height: 16px;
             }
         }
-
     </style>
 </head>
 <body>
@@ -3072,13 +3072,13 @@
         <button class="menu-search-btn" id="menuSearchBtn">Academias</button>
         
         <ul class="navigation-list">
-            <li class="nav-item"><a href="#home" class="nav-link">Home</a></li>
-            <li class="nav-item"><a href="#espaço-cliente" class="nav-link">Login</a></li>
+            <li class="nav-item"><a href="Menu-inicial-sem-logar.html" class="nav-link">Home</a></li>
+            <li class="nav-item"><a href="login-gym.html" class="nav-link">Login</a></li>
             <li class="nav-item"><a href="#franqueado" class="nav-link">Personais</a></li>
             <li class="nav-item"><a href="#news" class="nav-link">Sorteios</a></li>
             <li class="nav-item"><a href="config.html" class="nav-link">Configurações</a></li>
             <li class="nav-item"><a href="#sustentabilidade" class="nav-link">Blogs e dicaas</a></li>
-            <li class="nav-item"><a href="sobrenos.html" class="nav-link">Sobre nós</a></li>
+            <li class="nav-item"><a href="#historia" class="nav-link">Sobre nós</a></li>
         </ul>
     </nav>
 
@@ -3103,7 +3103,7 @@
                         <span class="sentence-2">A iniciativa busca aproximar a academia dos moradores, oferecendo um espaço digital onde é possível conhecer os serviços disponíveis, os horários de funcionamento, planos de treinamento, eventos e até dicas de exercícios e nutrição.</span> 
                         <span class="sentence-3">Além disso, a presença online fortalece a divulgação das academias e ajuda a população da cidade em questão de achar qual a academia mais próxima e custo benefício para você treinar!</span>
                     </p>
-                  <a href="sobrenos.html">  <button class="start-button">Sobre nós</button> </a>
+                    <a href="Sobre_nós.html"><button class="start-button">Sobre nós</button></a>
                 </div>
                 
                 <div class="workout-card">
@@ -3137,7 +3137,7 @@
 
         <div class="cards">
             <div class="academy-card1" data-type="musculacao" data-location="centro" data-price="60">
-                <div class="price-badge">R$ 60/mês</div>
+                <div class="price-badge">R$ 85/mês</div>
                 <div class="card-image" style="background-image: url('Smart-Strong.jpeg')">
                 </div>
                 <div class="card-content">
@@ -3150,12 +3150,12 @@
                             <div class="schedule-line"><strong>Sáb/Feriados:</strong> 9h - 14h</div>
                         </div>
                     </div>
-                    <a href="#" class="view-details-btn">Ver Detalhes</a>
+                    <a href="Smart-Strong.html" class="view-details-btn">Ver Detalhes</a>
                 </div>
             </div>
 
             <div class="academy-card1" data-type="musculacao" data-location="centro" data-price="60">
-                <div class="price-badge">R$ 60/mês</div>
+                <div class="price-badge">R$ 80/mês</div>
                 <div class="card-image" style="background-image: url('RedeFit.png')">
                 </div>
                 <div class="card-content">
@@ -3186,7 +3186,7 @@
                             <div class="schedule-line"><strong>Sáb/Feriados:</strong> 8h - 17h</div>
                         </div>
                     </div>
-                    <a href="#" class="view-details-btn">Ver Detalhes</a>
+                    <a href="Olympic-fit.html" class="view-details-btn">Ver Detalhes</a>
                 </div>
             </div>
         </div>
@@ -3249,9 +3249,6 @@
     </section>
     
     <section class="tres">
-        
-    
-
         <div class="fitness-content-box">
             <div class="training-info-section">
                 <h2>Ganhe Massa Muscular Rápido e com Saúde!</h2>
@@ -3326,11 +3323,12 @@
                 </p>
 
                 <div class="cta-buttons">
-                    <a href="personais.html" class="btn btn-download">
-                        <i class="fas fa-search"></i>
+                    <a href="Filtro_personal.html" class="btn btn-download">
+                      <i class="fas fa-search"></i>
                         Encontrar Personal
                     </a>
-                    <a href="cadastro.html" class="btn btn-secondary">
+                    
+                    <a href="Cadastrar_personal.html" class="btn btn-secondary">
                         <i class="fas fa-user-plus"></i>
                         Cadastre-se
                     </a>
@@ -3389,7 +3387,9 @@
             </div>
         </div>
     </section>
-   
+    <section class="quatro">
+    
+    </section>
     <footer class="academia-footer">
         <div class="academia-background">
             <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
@@ -3575,7 +3575,7 @@ try {
                                     <div style="font-size: 12px; color: rgba(255, 255, 255, 0.6);">${user.email}</div>
                                 </div>
                                 
-                                <a href="#perfil" style="
+                                <a href="perfil.html" style="
                                     display: flex;
                                     align-items: center;
                                     gap: 12px;
@@ -4204,8 +4204,33 @@ console.log('🎯 Sistema de login carregado e pronto!');
     
 </script>
 
-
-
+<script>
+  // ========== FUNÇÃO PARA REDIRECIONAR PARA PERFIL ==========
+function redirectToProfile() {
+    const userData = localStorage.getItem('currentUser') || localStorage.getItem('gymp2_current_user');
+    
+    if (userData) {
+        try {
+            const user = JSON.parse(userData);
+            console.log(' Redirecionando para perfil do usuário:', user.name);
+            window.location.href = 'perfil.html';
+        } catch (error) {
+            console.error(' Erro ao redirecionar:', error);
+            window.location.href = 'login-gym.html';
+        }
+    } else {
+        alert('Você precisa fazer login primeiro!');
+        window.location.href = 'login-gym.html';
+    }
+}
 </script>
+
+<script src="menu.js"></script>
+  <!-- 1. Sistema de Notificações Globais -->
+<script src="global-notifications.js"></script>
+<!-- 2. Gerenciador de Usuários -->
+<script src="user-manager.js"></script>
+<!-- 3. Header com Informações do Usuário -->
+<script src="user-header.js"></script>
 </body>
 </html>
