@@ -3698,7 +3698,7 @@
     cursor: pointer;
 }
 
-.academia-nav a:hover {
+.academia-nav  {
     opacity: 1;
     color: #00ff40;
     transform: translateX(5px);
