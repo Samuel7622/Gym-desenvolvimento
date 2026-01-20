@@ -1,129 +1,1173 @@
-// global-notifications.js - Sistema de notificações
-class NotificationSystem {
-    constructor() {
-        this.container = null;
-        this.init();
-    }
-
-    init() {
-        // Criar container de notificações se não existir
-        if (!document.getElementById('global-notifications')) {
-            this.container = document.createElement('div');
-            this.container.id = 'global-notifications';
-            this.container.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                z-index: 10000;
-                max-width: 400px;
-            `;
-            document.body.appendChild(this.container);
-        } else {
-            this.container = document.getElementById('global-notifications');
-        }
-    }
-
-    show(message, type = 'info', duration = 5000) {
-        const notification = document.createElement('div');
-        notification.style.cssText = `
-            background: ${this.getBackgroundColor(type)};
-            color: white;
-            padding: 15px 20px;
-            margin-bottom: 10px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            animation: slideIn 0.3s ease;
-            cursor: pointer;
-            border-left: 4px solid ${this.getBorderColor(type)};
-        `;
-
-        notification.innerHTML = `
-            <div style="display: flex; align-items: center; justify-content: space-between;">
-                <span>${message}</span>
-                <button style="background: none; border: none; color: white; cursor: pointer; margin-left: 10px;">×</button>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Gym P2 | Fitness e Bem-Estar</title>
+    <link rel="stylesheet" href="menu-inicial.css">
+</head>
+<body>
+    <header class="header-container" id="menu">
+        <div class="nav-wrapper">
+            <div class="brand-container">
+                <a href="#"><img src="logo.png" alt="Logo" class="logo-img"></a>
             </div>
-        `;
+            <div class="right-controls">
+                <div class="search-widget" id="searchWidget">
+                    <div class="expandable-search-field" id="searchField">
+                        <input type="text" class="search-input-field" placeholder="Digite sua pesquisa..." id="searchInput">
+                    </div>
+                    <button class="search-toggle-btn" id="searchToggle" aria-label="Abrir pesquisa">
+                        <svg class="search-icon" viewBox="0 0 24 24">
+                            <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                        </svg>
+                    </button>
+                    <div class="search-results" id="searchResults"></div>
+                </div>  
+                <a href="index.html"><button class="gym-access-btn"><i class="fas fa-home"></i> Home</button></a>
+                <a href="academias-publicas.html"><button class="gym-access-btn"><i class="fas fa-dumbbell"></i> Academias</button></a>
+                <a href="login-gym.html"><button class="gym-access-btn"><i class="fas fa-sign-in-alt"></i> Login</button></a>
+                <button class="menu-trigger" id="menuTrigger" aria-label="Abrir menu">
+                    <div class="hamburger-line"></div>
+                    <div class="hamburger-line"></div>
+                    <div class="hamburger-line"></div>
+                </button>
+            </div>
+        </div>
+    </header>
+    <nav class="slide-menu" id="slideMenu">
+        <div class="menu-header">
+            <button class="menu-close-btn" id="menuCloseBtn" aria-label="Fechar menu">
+                <svg class="menu-close-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+       <a href="academias-publicas.html"><button class="menu-search-btn">
+            <i class="fas fa-search"></i> Academias
+        </button>
+        </a> 
+        <ul class="navigation-list">
+            <li class="nav-item"><a href="index.html" class="nav-link"><i class="fas fa-home"></i> Home</a></li>
+            <li class="nav-item"><a href="#espaço-cliente" class="nav-link"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+            <li class="nav-item"><a href="Filtro_personal.html" class="nav-link"><i class="fas fa-percent"></i> Promoções</a></li>
+            <li class="nav-item"><a href="#news" class="nav-link"><i class="fas fa-gift"></i> Sorteios</a></li>
+            <li class="nav-item"><a href="config.html" class="nav-link"><i class="fas fa-cog"></i> Configurações</a></li>
+            <li class="nav-item"><a href="Sobre_nós.html" class="nav-link"><i class="fas fa-info-circle"></i> Sobre nós</a></li>
+        </ul>
+    </nav>
+    <div class="menu-overlay" id="menuOverlay"></div>
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1>Bem vindo ao Gym P2, aqui você encontra: 
+                        <span class="rotating-text-wrapper">
+                            <div class="rotating-text creative">Academias</div>
+                            <div class="rotating-text innovative">Artes Marciais</div>
+                            <div class="rotating-text professional">Blogs e dicas</div>
+                            <div class="rotating-text dynamic">Sorteios</div>
+                        </span>
+                    </h1>
+                    <div class="linha-basica"></div>
+                    <p class="hero-description">
+                        <span class="sentence-1">O site Gym P2 foi criado com o objetivo de facilitar o acesso da comunidade local a informações sobre saúde, bem-estar e atividades físicas e também para ajudar a população da cidade de Pedro II.</span> 
+                        <span class="sentence-2">A iniciativa busca aproximar a academia dos moradores, oferecendo um espaço digital onde é possível conhecer os serviços disponíveis, os horários de funcionamento, planos de treinamento, eventos e até dicas de exercícios e nutrição.</span> 
+                        <span class="sentence-3">Além disso, a presença online fortalece a divulgação das academias e ajuda a população da cidade em questão de achar qual a academia mais próxima e custo benefício para você treinar!</span>
+                    </p>
+                    <a href="Sobre_nós.html"><button class="start-button">Sobre nós</button></a>
+                </div>
+                <div class="workout-card">
+                    <div class="workout-header">
+                        <div class="workout-title"></div>
+                    </div>
+                    <div class="workout-image">
+                        <div class="circle-progress">
+                            <div class="workout-man"></div>
+                        </div>
+                        <div class="circle-progress2">
+                            <div class="slider">
+                                <div class="slide1"></div>
+                                <div class="slide1"></div>
+                                <div class="slide1"></div>
+                                <div class="slide1"></div>
+                                <div class="slide1"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="dois">
+        <div class="section-header">
+            <h1 class="section-title">Academias Destaque</h1>
+        </div>
+        <div class="cards">
+            <div class="academy-card1" data-type="musculacao" data-location="centro" data-price="60">
+                <div class="price-badge">R$ 85/mês</div>
+                <div class="card-image" style="background-image: url('')">
+                </div>
+                <div class="card-content">
+                    <h3 class="academy-name"></h3>
+                    <span class="academy-type">Tipo: Musculação</span>
+                    <div class="academy-location">R. Ângelo, n°137, Pedro II - PI, 64255-000</div>
+                    <div class="schedule-section">
+                        <div class="schedule">
+                            <div class="schedule-line"><strong>Seg a Sex:</strong> 6h - 22h</div>
+                            <div class="schedule-line"><strong>Sáb/Feriados:</strong> 9h - 14h</div>
+                        </div>
+                    </div>
+                    <a href="Smart-Strong.html" class="view-details-btn">Ver Detalhes</a>
+                </div>
+            </div>
+            <div class="academy-card1" data-type="musculacao" data-location="centro" data-price="60">
+                <div class="price-badge">R$ 80/mês</div>
+                <div class="card-image" style="background-image: url('')">
+                </div>
+                <div class="card-content">
+                    <h3 class="academy-name"></h3>
+                    <span class="academy-type">Tipo: Musculação</span>
+                    <div class="academy-location">R. . Cordeiro, 739, Pedro II - PI, 64255-000</div>
+                    <div class="schedule-section">
+                        <div class="schedule">
+                            <div class="schedule-line"><strong>Seg a Sex:</strong> 5h - 23h</div>
+                            <div class="schedule-line"><strong>Sáb/Feriados:</strong> 8h - 17h</div>
+                        </div>
+                    </div>
+                    <a href="Redefit.html" class="view-details-btn">Ver Detalhes</a>
+                </div>
+            </div>
+            <div class="academy-card1" data-type="musculacao" data-location="centro" data-price="60">
+                <div class="price-badge">R$ 60/mês</div>
+                <div class="card-image" style="background-image: url('')">
+                </div>
+                <div class="card-content">
+                    <h3 class="academy-name">Academia</h3>
+                    <span class="academy-type">Tipo: Musculação</span>
+                    <div class="academy-location"> José Lourenço Mourão, 865A, Pedro II - PI, 64255-000</div>
+                    <div class="schedule-section">
+                        <div class="schedule">
+                            <div class="schedule-line"><strong>Seg a Sex:</strong> 5h - 23h</div>
+                            <div class="schedule-line"><strong>Sáb/Feriados:</strong> 8h - 17h</div>
+                        </div>
+                    </div>
+                    <a href="Olympic-fit.html" class="view-details-btn">Ver Detalhes</a>
+                </div>
+            </div>
+        </div>
+        <div class="cards2">
+            <div class="academy-card2" data-type="musculacao" data-location="centro" data-price="60">
+                <div class="price-badge2">R$ 60/mês</div>
+                <div class="card-image2" style="background-image: url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400&h=250&fit=crop&q=80')">
+                </div>
+                <div class="card-content2">
+                    <h3 class="academy-name2">Academia Força Total</h3>
+                    <span class="academy-type2">Tipo: Artes Marciais</span>
+                    <div class="academy-location2">Rua Principal, 123 - Centro</div>
+                    <div class="schedule-section2">
+                        <div class="schedule2">
+                            <div class="schedule-line2"><strong>Seg a Sex:</strong> 5h - 23h</div>
+                            <div class="schedule-line2"><strong>Sáb/Feriados:</strong> 8h - 17h</div>
+                        </div>
+                    </div>
+                    <a href="#" class="view-details-btn2">Ver Detalhes</a>
+                </div>
+            </div>
+            <div class="academy-card2" data-type="musculacao" data-location="centro" data-price="60">
+                <div class="price-badge2">R$ 60/mês</div>
+                <div class="card-image2" style="background-image: url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400&h=250&fit=crop&q=80')">
+                </div>
+                <div class="card-content2">
+                    <h3 class="academy-name2">Academia Força Total</h3>
+                    <span class="academy-type2">Tipo: Artes Marciais</span>
+                    <div class="academy-location2">Rua Principal, 123 - Centro</div>
+                    <div class="schedule-section2">
+                        <div class="schedule2">
+                            <div class="schedule-line2"><strong>Seg a Sex:</strong> 5h - 23h</div>
+                            <div class="schedule-line2"><strong>Sáb/Feriados:</strong> 8h - 17h</div>
+                        </div>
+                    </div>
+                    <a href="#" class="view-details-btn2">Ver Detalhes</a>
+                </div>
+            </div>
 
-        // Adicionar estilos de animação
-        if (!document.getElementById('notification-styles')) {
-            const styles = document.createElement('style');
-            styles.id = 'notification-styles';
-            styles.textContent = `
-                @keyframes slideIn {
-                    from { transform: translateX(100%); opacity: 0; }
-                    to { transform: translateX(0); opacity: 1; }
-                }
-                @keyframes slideOut {
-                    from { transform: translateX(0); opacity: 1; }
-                    to { transform: translateX(100%); opacity: 0; }
-                }
-            `;
-            document.head.appendChild(styles);
+            <div class="academy-card2" data-type="musculacao" data-location="centro" data-price="60">
+                <div class="price-badge2">R$ 60/mês</div>
+                <div class="card-image2" style="background-image: url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400&h=250&fit=crop&q=80')">
+                </div>
+                <div class="card-content2">
+                    <h3 class="academy-name2">Academia Força Total</h3>
+                    <span class="academy-type2">Tipo: Artes Marciais</span>
+                    <div class="academy-location2">Rua Principal, 123 - Centro</div>
+                    <div class="schedule-section2">
+                        <div class="schedule2">
+                            <div class="schedule-line2"><strong>Seg a Sex:</strong> 5h - 23h</div>
+                            <div class="schedule-line2"><strong>Sáb/Feriados:</strong> 8h - 17h</div>
+                        </div>
+                    </div>
+                    <a href="#" class="view-details-btn2">Ver Detalhes</a>
+                </div>
+            </div>
+        </div>
+    </section>
+  
+    <section class="quatro">
+        <div class="accent-bar"></div>
+        <div class="personal-wrapper">
+            <!-- LADO ESQUERDO -->
+            <div class="personal-text">
+                <h1 class="personal-title">
+                    Personal Trainers:<br>
+                    Seu parceiro nos treinos!
+                </h1>
+
+                <p class="personal-subtitle">
+                    Conecte-se com profissionais qualificados e alcance seus objetivos
+                </p>
+
+                <ul class="info-list">
+                    <li class="info-item">
+                        <span class="bullet"></span>
+                        <span>Encontre personal trainers próximos a você</span>
+                    </li>
+                    <li class="info-item">
+                        <span class="bullet"></span>
+                        <span>Veja avaliações e especialidades</span>
+                    </li>
+                    <li class="info-item">
+                        <span class="bullet"></span>
+                        <span>Agende sua primeira sessão gratuita</span>
+                    </li>
+                    <li class="info-item">
+                        <span class="bullet"></span>
+                        <span>Profissionais certificados e experientes</span>
+                    </li>
+                </ul>
+
+                <p class="extra-info">
+                    Tudo isso de graça!
+                </p>
+
+                <div class="cta-buttons">
+                    <a href="Filtro_personal.html" class="btn btn-download">
+                        <i class="fas fa-search"></i>
+                        Encontrar Personal
+                    </a>
+                    
+                    <a href="Cadastrar_personal.html" class="btn btn-secondary">
+                        <i class="fas fa-user-plus"></i>
+                        Cadastre-se
+                    </a>
+                </div>
+            </div>
+
+            <!-- LADO DIREITO - MOCKUPS -->
+            <div class="phones-mockup">
+                <div class="phone phone-1">
+                    <div class="phone-screen">
+                        <div class="notch"></div>
+                        <div class="screen-content">
+                            <div class="screen-header">
+                                <h4>Personal Trainers</h4>
+                                <p>Encontre o seu</p>
+                            </div>
+                            <div class="screen-card">
+                                <span class="card-info">Profissionais</span>
+                                <span class="card-value">150+</span>
+                            </div>
+                            <div class="screen-card">
+                                <span class="card-info">Avaliação</span>
+                                <span class="card-value">5.0 ★</span>
+                            </div>
+                            <div class="screen-card">
+                                <span class="card-info">Alunos</span>
+                                <span class="card-value">2.5K</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="phone phone-2">
+                    <div class="phone-screen">
+                        <div class="notch"></div>
+                        <div class="screen-content">
+                            <div class="screen-header">
+                                <h4>Seus Treinos</h4>
+                                <p>Acompanhamento</p>
+                            </div>
+                            <div class="screen-card">
+                                <span class="card-info">Treinos/Mês</span>
+                                <span class="card-value">16</span>
+                            </div>
+                            <div class="screen-card">
+                                <span class="card-info">Progresso</span>
+                                <span class="card-value">85%</span>
+                            </div>
+                            <div class="screen-card">
+                                <span class="card-info">Meta</span>
+                                <span class="card-value">4/4</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+   <footer class="academia-footer">
+        <div class="academia-background">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                width="100%" height="100%" viewBox="0 0 1600 900">
+                <defs>
+                    <!-- COR ALTERADA AQUI: #00ff40 com 30% de opacidade (4D em hex) -->
+                    <path id="wave" fill="#00ff404D" d="M-363.852,502.589c0,0,236.988-41.997,505.475,0
+                    s371.981,38.998,575.971,0s293.985-39.278,505.474,5.859s493.475,48.368,716.963-4.995v560.106H-363.852V502.589z" />
+                </defs>
+                <g>
+                    <use xlink:href="#wave" opacity=".4">
+                        <animateTransform attributeName="transform" attributeType="XML" type="translate" dur="8s" calcMode="spline"
+                            values="270 230; -334 180; 270 230" keyTimes="0; .5; 1" keySplines="0.42, 0, 0.58, 1.0;0.42, 0, 0.58, 1.0"
+                            repeatCount="indefinite" />
+                    </use>
+                    <use xlink:href="#wave" opacity=".6">
+                        <animateTransform attributeName="transform" attributeType="XML" type="translate" dur="6s" calcMode="spline"
+                            values="-270 230;243 220;-270 230" keyTimes="0; .6; 1" keySplines="0.42, 0, 0.58, 1.0;0.42, 0, 0.58, 1.0"
+                            repeatCount="indefinite" />
+                    </use>
+                    <use xlink:href="#wave" opacty=".9">
+                        <animateTransform attributeName="transform" attributeType="XML" type="translate" dur="4s" calcMode="spline"
+                            values="0 230;-140 200;0 230" keyTimes="0; .4; 1" keySplines="0.42, 0, 0.58, 1.0;0.42, 0, 0.58, 1.0"
+                            repeatCount="indefinite" />
+                    </use>
+                </g>
+            </svg>
+        </div>
+        <div class="academia-footer-inner">
+            <div class="academia-top">
+                <div>
+                    <h2>VOCÊ ESTÁ PRONTO PARA TRANSFORMAR SEU CORPO E SUA VIDA?</h2>
+                    <h3>Encontre as melhores academias, dicas e uma comunidade que te impulsiona!</h3>
+                </div>
+            </div>
+            <div class="academia-bottom">
+                <div class="academia-logo-content">
+                    <div class="academia-socials">
+                        <a href="#" class="instagram" title="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+                <nav class="academia-nav">
+                    <ul>
+                        <li><h4>SOBRE O GYM P2</h4></li>
+                        <li><a href="#">Quem Somos</a></li>
+                        <li><a href="#">Nossa Missão</a></li>
+                        <li><a href="#">Contatos</a></li>
+                    </ul>
+                    <ul>
+                        <li><h4>EXPLORE</h4></li>
+                        <li><a href="#">Academias</a></li>
+                        <li><a href="#">Artes Marciais</a></li>
+                        <li><a href="#">Blog e Dicas</a></li>
+                    </ul>
+                    <ul>
+                        <li><h4>CONECTE-SE</h4></li>
+                        <li><a href="#">Siga-nos nas Redes Sociais</a></li>
+                        <li><a href="#">Política de Privacidade</a></li>
+                        <li><a href="#">Termos de Uso</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </footer>
+    <script src="menu.js"></script>
+    <!-- 1. Sistema de Notificações Globais -->
+    <script src="global-notifications.js"></script>
+    <!-- 2. Gerenciador de Usuários -->
+    <script src="user-manager.js"></script>
+    <!-- 3. Header com Informações do Usuário -->
+    <script src="user-header.js"></script>
+    <script>   
+          // ========== SISTEMA DO HEADER ==========
+    
+    // Verificar se usuário está logado
+    function checkUserLogin() {
+        const user = getCurrentUser();
+        const userHeaderContainer = document.getElementById('userHeaderContainer');
+        const loginButton = document.getElementById('loginButton');
+        
+        if (user) {
+            // Usuário está logado - mostrar botão do usuário
+            if (userHeaderContainer) userHeaderContainer.style.display = 'flex';
+            if (loginButton) loginButton.style.display = 'none';
+            
+            // Atualizar nome e avatar no header
+            updateHeaderUserInfo(user);
+        } else {
+            // Usuário não está logado - mostrar botão de login
+            if (userHeaderContainer) userHeaderContainer.style.display = 'none';
+            if (loginButton) loginButton.style.display = 'block';
         }
-
-        this.container.appendChild(notification);
-
-        // Fechar ao clicar no botão
-        const closeBtn = notification.querySelector('button');
-        closeBtn.addEventListener('click', () => {
-            this.removeNotification(notification);
-        });
-
-        // Auto-remover após duração
-        if (duration > 0) {
-            setTimeout(() => {
-                this.removeNotification(notification);
-            }, duration);
+    }
+    
+    // Atualizar informações do usuário no header
+    function updateHeaderUserInfo(user) {
+        // Nome no botão do header
+        const userNameHeader = document.getElementById('userNameHeader');
+        const dropdownUserName = document.getElementById('dropdownUserName');
+        const dropdownUserEmail = document.getElementById('dropdownUserEmail');
+        const userAvatar = document.getElementById('userAvatar');
+        
+        if (userNameHeader) userNameHeader.textContent = user.name || 'Usuário';
+        if (dropdownUserName) dropdownUserName.textContent = user.name || 'Usuário';
+        if (dropdownUserEmail) dropdownUserEmail.textContent = user.email || 'email@exemplo.com';
+        
+        // Atualizar avatar com iniciais
+        if (userAvatar && user.name) {
+            const initials = getInitials(user.name);
+            userAvatar.textContent = initials;
         }
-
-        return notification;
+    }
+    
+    // Função para obter iniciais do nome
+    function getInitials(name) {
+        if (!name) return 'U';
+        return name
+            .split(' ')
+            .map(n => n[0])
+            .slice(0, 2)
+            .join('')
+            .toUpperCase();
+    }
+    
+    // Sistema de dropdown do usuário
+    document.addEventListener('DOMContentLoaded', function() {
+        const userHeaderContainer = document.getElementById('userHeaderContainer');
+        const userDropdown = document.getElementById('userDropdown');
+        
+        if (userHeaderContainer && userDropdown) {
+            userHeaderContainer.addEventListener('click', function() {
+                userDropdown.style.opacity = userDropdown.style.opacity === '1' ? '0' : '1';
+                userDropdown.style.visibility = userDropdown.style.visibility === 'visible' ? 'hidden' : 'visible';
+                userDropdown.style.transform = userDropdown.style.transform === 'translateY(0px)' ? 'translateY(-10px)' : 'translateY(0px)';
+            });
+            
+            // Fechar dropdown ao clicar fora
+            document.addEventListener('click', function(event) {
+                if (!userHeaderContainer.contains(event.target)) {
+                    userDropdown.style.opacity = '0';
+                    userDropdown.style.visibility = 'hidden';
+                    userDropdown.style.transform = 'translateY(-10px)';
+                }
+            });
+        }
+    });
+    
+    // Função de logout
+    function logout() {
+        if (confirm('Tem certeza que deseja sair da sua conta?')) {
+            // Limpar dados do usuário
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('gymp2_current_user');
+            sessionStorage.removeItem('gymp2_user');
+            
+            // Redirecionar para página inicial
+            window.location.href = 'index.html';
+        }
     }
 
-    removeNotification(notification) {
-        notification.style.animation = 'slideOut 0.3s ease';
-        setTimeout(() => {
-            if (notification.parentNode) {
-                notification.parentNode.removeChild(notification);
+    // ========== FUNÇÕES DO HEADER (PESQUISA E MENU) ==========
+    
+    // Sistema de pesquisa
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchToggle = document.getElementById('searchToggle');
+        const searchField = document.getElementById('searchField');
+        const searchInput = document.getElementById('searchInput');
+        const searchResults = document.getElementById('searchResults');
+        
+        if (searchToggle && searchField && searchInput) {
+            searchToggle.addEventListener('click', function() {
+                searchField.classList.toggle('expanded');
+                if (searchField.classList.contains('expanded')) {
+                    searchInput.focus();
+                } else {
+                    searchInput.value = '';
+                    searchResults.classList.remove('active');
+                }
+            });
+            
+            searchInput.addEventListener('input', function() {
+                if (this.value.trim() !== '') {
+                    searchResults.classList.add('active');
+                    // Simular resultados
+                    searchResults.innerHTML = `
+                        <div class="search-result-item">
+                            <div class="result-category">ACADEMIA</div>
+                            <div class="result-title">Smart Strong</div>
+                            <div class="result-description">Academia de musculação e crossfit</div>
+                        </div>
+                        <div class="search-result-item">
+                            <div class="result-category">ACADEMIA</div>
+                            <div class="result-title">Rede-Fit P2</div>
+                            <div class="result-description">Rede de academias fitness</div>
+                        </div>
+                        <div class="search-result-item">
+                            <div class="result-category">ACADEMIA</div>
+                            <div class="result-title">Olympic Fit</div>
+                            <div class="result-description">Academia de alta performance</div>
+                        </div>
+                    `;
+                } else {
+                    searchResults.classList.remove('active');
+                }
+            });
+            
+            // Fechar pesquisa ao clicar fora
+            document.addEventListener('click', function(event) {
+                if (!searchField.contains(event.target) && !searchToggle.contains(event.target)) {
+                    searchField.classList.remove('expanded');
+                    searchResults.classList.remove('active');
+                }
+            });
+        }
+      
+            
+            // Função para obter iniciais do nome
+            function getInitials(name) {
+                return name
+                    .split(' ')
+                    .map(n => n[0])
+                    .slice(0, 2)
+                    .join('')
+                    .toUpperCase();
             }
-        }, 300);
-    }
-
-    getBackgroundColor(type) {
-        const colors = {
-            success: 'linear-gradient(135deg, #00b894, #00a085)',
-            error: 'linear-gradient(135deg, #ff7675, #e84342)',
-            warning: 'linear-gradient(135deg, #fdcb6e, #e17055)',
-            info: 'linear-gradient(135deg, #74b9ff, #0984e3)'
-        };
-        return colors[type] || colors.info;
-    }
-
-    getBorderColor(type) {
-        const colors = {
-            success: '#00a085',
-            error: '#e84342',
-            warning: '#e17055',
-            info: '#0984e3'
-        };
-        return colors[type] || colors.info;
-    }
-
-    success(message, duration = 5000) {
-        return this.show(message, 'success', duration);
-    }
-
-    error(message, duration = 5000) {
-        return this.show(message, 'error', duration);
-    }
-
-    warning(message, duration = 5000) {
-        return this.show(message, 'warning', duration);
-    }
-
-    info(message, duration = 5000) {
-        return this.show(message, 'info', duration);
-    }
-}
-
-// Tornar global
-window.notifications = new NotificationSystem();
+            
+            // Configurar dropdown do usuário
+            function setupUserDropdown() {
+                const userContainer = document.getElementById('userHeaderContainer');
+                const dropdownMenu = document.getElementById('userDropdownMenu');
+                const logoutBtn = document.getElementById('logoutBtnHeader'); // ID ALTERADO AQUI
+                
+                if (!userContainer || !dropdownMenu || !logoutBtn) {
+                    console.log('⚠️ Elementos do dropdown não encontrados');
+                    return;
+                }
+                
+                // Toggle do dropdown
+                userContainer.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const isActive = dropdownMenu.style.opacity === '1';
+                    
+                    if (isActive) {
+                        dropdownMenu.style.opacity = '0';
+                        dropdownMenu.style.visibility = 'hidden';
+                        dropdownMenu.style.transform = 'translateY(-10px)';
+                    } else {
+                        dropdownMenu.style.opacity = '1';
+                        dropdownMenu.style.visibility = 'visible';
+                        dropdownMenu.style.transform = 'translateY(0)';
+                    }
+                });
+                
+                // Fechar dropdown ao clicar fora
+                document.addEventListener('click', (e) => {
+                    if (!userContainer.contains(e.target)) {
+                        dropdownMenu.style.opacity = '0';
+                        dropdownMenu.style.visibility = 'hidden';
+                        dropdownMenu.style.transform = 'translateY(-10px)';
+                    }
+                });
+                
+                // Prevenir fechamento ao clicar no dropdown
+                dropdownMenu.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                });
+                
+                // Hover effect no container
+                userContainer.addEventListener('mouseenter', () => {
+                    userContainer.style.background = 'rgba(0, 255, 136, 0.2)';
+                    userContainer.style.borderColor = 'rgba(0, 255, 136, 0.5)';
+                    userContainer.style.transform = 'translateY(-2px)';
+                    userContainer.style.boxShadow = '0 4px 15px rgba(0, 255, 136, 0.3)';
+                });
+                
+                userContainer.addEventListener('mouseleave', () => {
+                    userContainer.style.background = 'rgba(0, 255, 136, 0.1)';
+                    userContainer.style.borderColor = 'rgba(0, 255, 136, 0.3)';
+                    userContainer.style.transform = 'translateY(0)';
+                    userContainer.style.boxShadow = 'none';
+                });
+                
+                // Hover nos itens do menu
+                const menuItems = dropdownMenu.querySelectorAll('a, #logoutBtnHeader');
+                menuItems.forEach(item => {
+                    item.addEventListener('mouseenter', () => {
+                        item.style.background = 'rgba(0, 255, 136, 0.1)';
+                    });
+                    item.addEventListener('mouseleave', () => {
+                        item.style.background = 'transparent';
+                    });
+                });
+                
+                // EVENTO DE LOGOUT CORRIGIDO
+                logoutBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    
+                    if (confirm('Deseja realmente sair da sua conta?')) {
+                        console.log('🚪 Fazendo logout do header...');
+                        
+                        // Limpar TODOS os dados de sessão
+                        localStorage.removeItem('gymp2_current_user');
+                        localStorage.removeItem('currentUser');
+                        sessionStorage.removeItem('gymp2_token');
+                        sessionStorage.removeItem('gymp2_user');
+                        
+                        // Mostrar feedback
+                        if (window.notifications) {
+                            window.notifications.success('Logout realizado com sucesso!');
+                        } else {
+                            alert('Logout realizado!');
+                        }
+                        
+                        // Remover o dropdown imediatamente
+                        const userContainer = document.getElementById('userHeaderContainer');
+                        if (userContainer) {
+                            userContainer.remove();
+                        }
+                        
+                        // Recriar o botão de login
+                        recreateLoginButton();
+                        
+                        // Recarregar a página após 1 segundo para sincronizar tudo
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 1000);
+                    }
+                });
+                
+                console.log('✅ Dropdown do usuário configurado');
+            }
+            
+            // FUNÇÃO PARA RECRIAR BOTÃO DE LOGIN
+            function recreateLoginButton() {
+                const rightControls = document.querySelector('.right-controls');
+                if (!rightControls) return;
+                
+                // Criar botão de login
+                const loginBtn = document.createElement('div');
+                loginBtn.className = 'gym-access-btn';
+                loginBtn.innerHTML = `
+                    <a href="login-gym.html" style="color: #00ff88; text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-sign-in-alt"></i>
+                        <span>Login</span>
+                    </a>
+                `;
+                
+                // Inserir no lugar correto
+                const menuTrigger = document.getElementById('menuTrigger');
+                if (menuTrigger) {
+                    menuTrigger.parentNode.insertBefore(loginBtn, menuTrigger);
+                } else {
+                    rightControls.appendChild(loginBtn);
+                }
+                
+                console.log('✅ Botão de login recriado');
+            }
+            
+        })();
+        // NÃO ADICIONE A FUNÇÃO logout() AQUI - ELA FOI REMOVIDA
+    </script>
+    
+    <script>
+        // ========== DEBUG E VERIFICAÇÃO ==========
+        console.log('🚀 Script de login carregado!');
+        
+        // Verificar se há usuário logado imediatamente
+        const userData = localStorage.getItem('currentUser') || localStorage.getItem('gymp2_current_user');
+        console.log('📦 Dados do usuário no localStorage:', userData);
+        
+        if (userData) {
+            try {
+                const user = JSON.parse(userData);
+                console.log('👤 Usuário parseado:', user);
+            } catch (error) {
+                console.error('❌ Erro ao fazer parse:', error);
+            }
+        }
+        
+        // ========== SISTEMA PRINCIPAL ATUALIZADO ==========
+        function initLoginSystem() {
+            console.log('🔧 Iniciando sistema de login...');
+            
+            const userData = localStorage.getItem('currentUser') || localStorage.getItem('gymp2_current_user');
+            
+            if (userData) {
+                try {
+                    const user = JSON.parse(userData);
+                    console.log(' Usuário logado detectado:', user.name);
+                    updateUIForLoggedUser(user);
+                } catch (error) {
+                    console.error(' Erro ao processar usuário:', error);
+                }
+            } else {
+                console.log('ℹ️ Nenhum usuário logado');
+                resetUIForLoggedOut();
+            }
+        }
+        
+        // ========== ATUALIZAR INTERFACE PARA USUÁRIO LOGADO ==========
+        function updateUIForLoggedUser(user) {
+            console.log('🎨 Atualizando UI para usuário logado:', user.name);
+            
+            // 1. Atualizar header principal
+            updateMainHeader(user);
+            
+            // 2. Atualizar menu hamburguer
+            updateHamburgerMenu(user);
+            
+            console.log('✅ UI atualizada com sucesso!');
+        }
+        
+        // ========== ATUALIZAR HEADER PRINCIPAL ==========
+        function updateMainHeader(user) {
+            const rightControls = document.querySelector('.right-controls');
+            if (!rightControls) {
+                console.error('❌ .right-controls não encontrado');
+                return;
+            }
+        
+            // Remover botão Login existente
+            const loginButtons = rightControls.querySelectorAll('.gym-access-btn');
+            loginButtons.forEach(btn => {
+                if (btn.textContent.includes('Login') || btn.querySelector('a')?.textContent.includes('Login')) {
+                    console.log('🗑 Removendo botão Login do header');
+                    btn.remove();
+                }
+            });
+        
+            // Verificar se já existe o componente de usuário
+            if (document.getElementById('userHeaderContainer')) {
+                console.log('ℹ️ Header de usuário já existe');
+                return;
+            }
+        
+            // Criar componente do usuário
+            const initials = user.name.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase();
+            const firstName = user.name.split(' ')[0];
+        
+            const userHTML = `
+                <div class="user-header-container" id="userHeaderContainer" style="
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                    background: rgba(0, 255, 136, 0.1);
+                    border: 2px solid rgba(0, 255, 136, 0.3);
+                    border-radius: 30px;
+                    padding: 6px 16px 6px 6px;
+                    transition: all 0.3s ease;
+                    cursor: pointer;
+                    position: relative;
+                ">
+                    <div class="user-avatar" style="
+                        width: 40px;
+                        height: 40px;
+                        border-radius: 50%;
+                        background: linear-gradient(135deg, #00ff88 0%, #00cc6a 100%);
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-weight: 700;
+                        font-size: 16px;
+                        color: #000;
+                        border: 2px solid #fff;
+                    ">${initials}</div>
+                    
+                    <span class="user-name-text" style="
+                        font-size: 14px;
+                        font-weight: 600;
+                        color: #fff;
+                    ">${firstName}</span>
+                    
+                    <div class="user-dropdown-menu" id="userDropdownMenu" style="
+                        position: absolute;
+                        top: calc(100% + 10px);
+                        right: 0;
+                        background: #1a1a1a;
+                        border: 2px solid rgba(0, 255, 136, 0.3);
+                        border-radius: 16px;
+                        padding: 12px;
+                        min-width: 220px;
+                        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+                        opacity: 0;
+                        visibility: hidden;
+                        transform: translateY(-10px);
+                        transition: all 0.3s ease;
+                        z-index: 3000;
+                    ">
+                        <div style="padding: 12px; border-bottom: 1px solid rgba(0, 255, 136, 0.2); margin-bottom: 8px;">
+                            <div style="font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 4px;">${user.name}</div>
+                            <div style="font-size: 12px; color: rgba(255, 255, 255, 0.6);">${user.email || 'usuario@gymp2.com'}</div>
+                        </div>
+                        
+                        <a href="#perfil" style="
+                            display: flex;
+                            align-items: center;
+                            gap: 12px;
+                            padding: 12px;
+                            border-radius: 10px;
+                            cursor: pointer;
+                            transition: all 0.2s ease;
+                            color: #fff;
+                            text-decoration: none;
+                            margin-bottom: 4px;
+                        ">
+                            <svg style="width: 20px; height: 20px;" viewBox="0 0 24 24">
+                                <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
+                            </svg>
+                            Meu Perfil
+                        </a>
+                        
+                        <div id="logoutBtn" style="
+                            display: flex;
+                            align-items: center;
+                            gap: 12px;
+                            padding: 12px;
+                            border-radius: 10px;
+                            cursor: pointer;
+                            transition: all 0.2s ease;
+                            color: #ff4444;
+                            border-top: 1px solid rgba(255, 68, 68, 0.2);
+                            margin-top: 8px;
+                        ">
+                            <svg style="width: 20px; height: 20px;" viewBox="0 0 24 24">
+                                <path fill="currentColor" d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+                            </svg>
+                            Sair
+                        </div>
+                    </div>
+                </div>
+            `;
+        
+            // Inserir antes do menu hamburguer
+            const menuTrigger = document.getElementById('menuTrigger');
+            if (menuTrigger) {
+                menuTrigger.insertAdjacentHTML('beforebegin', userHTML);
+                console.log('✅ Header de usuário inserido no header principal');
+            } else {
+                rightControls.insertAdjacentHTML('beforeend', userHTML);
+                console.log('✅ Header de usuário inserido no final do header');
+            }
+        
+            // Configurar eventos do dropdown
+            setupUserDropdownEvents();
+        }
+        
+        // ========== ATUALIZAR MENU HAMBURGUER ==========
+        function updateHamburgerMenu(user) {
+            console.log('🍔 Atualizando menu hamburguer...');
+            
+            const navigationList = document.querySelector('.navigation-list');
+            if (!navigationList) {
+                console.error('❌ .navigation-list não encontrado');
+                return;
+            }
+        
+            // Encontrar item de Login
+            const navItems = navigationList.querySelectorAll('.nav-item');
+            let loginItem = null;
+            
+            navItems.forEach(item => {
+                const link = item.querySelector('.nav-link');
+                if (link && (link.textContent.trim() === 'Login' || link.getAttribute('href') === '#espaço-cliente')) {
+                    loginItem = item;
+                    console.log('🔍 Item de login encontrado no menu');
+                }
+            });
+        
+            if (loginItem) {
+                const firstName = user.name.split(' ')[0];
+                
+                // Substituir Login por Perfil
+                loginItem.innerHTML = `
+                    <a href="#perfil" class="nav-link" style="color: #00ff88; font-weight: 700; background: rgba(0, 255, 136, 0.1); border-radius: 8px; margin: 5px 0; padding: 12px 15px !important;">
+                        <i class="fas fa-user" style="margin-right: 10px;"></i>
+                        Meu Perfil (${firstName})
+                    </a>
+                `;
+                console.log('✅ Login substituído por Perfil no menu');
+        
+                // Remover logout existente
+                const existingLogout = document.getElementById('menuLogoutBtn');
+                if (existingLogout) {
+                    existingLogout.closest('.nav-item').remove();
+                    console.log('🗑 Logout anterior removido');
+                }
+        
+                // Adicionar item Sair
+                const logoutItem = document.createElement('li');
+                logoutItem.className = 'nav-item';
+                logoutItem.innerHTML = `
+                    <a href="#logout" class="nav-link" style="color: #ff4444; background: rgba(255, 68, 68, 0.1); border-radius: 8px; margin: 5px 0; padding: 12px 15px !important;" id="menuLogoutBtn">
+                        <i class="fas fa-sign-out-alt" style="margin-right: 10px;"></i>
+                        Sair
+                    </a>
+                `;
+                
+                navigationList.appendChild(logoutItem);
+                console.log('✅ Item Sair adicionado ao menu');
+        
+                // Configurar evento de logout
+                const menuLogoutBtn = document.getElementById('menuLogoutBtn');
+                if (menuLogoutBtn) {
+                    menuLogoutBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        if (confirm('Deseja realmente sair da sua conta?')) {
+                            console.log('🚪 Fazendo logout...');
+                            localStorage.removeItem('gymp2_current_user');
+                            localStorage.removeItem('currentUser');
+                            alert('Logout realizado com sucesso!');
+                            window.location.reload();
+                        }
+                    });
+                }
+            } else {
+                console.log('⚠️ Item de login não encontrado no menu hamburguer');
+            }
+        }
+        
+        // ========== CONFIGURAR EVENTOS DO DROPDOWN ==========
+        function setupUserDropdownEvents() {
+            const userContainer = document.getElementById('userHeaderContainer');
+            const dropdownMenu = document.getElementById('userDropdownMenu');
+            const logoutBtn = document.getElementById('logoutBtn');
+        
+            if (!userContainer || !dropdownMenu || !logoutBtn) {
+                console.error('❌ Elementos do dropdown não encontrados');
+                return;
+            }
+        
+            // Toggle dropdown
+            userContainer.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isVisible = dropdownMenu.style.opacity === '1';
+                
+                if (isVisible) {
+                    dropdownMenu.style.opacity = '0';
+                    dropdownMenu.style.visibility = 'hidden';
+                    dropdownMenu.style.transform = 'translateY(-10px)';
+                } else {
+                    dropdownMenu.style.opacity = '1';
+                    dropdownMenu.style.visibility = 'visible';
+                    dropdownMenu.style.transform = 'translateY(0)';
+                }
+            });
+        
+            // Fechar ao clicar fora
+            document.addEventListener('click', () => {
+                dropdownMenu.style.opacity = '0';
+                dropdownMenu.style.visibility = 'hidden';
+                dropdownMenu.style.transform = 'translateY(-10px)';
+            });
+        
+            // Logout
+            logoutBtn.addEventListener('click', () => {
+                if (confirm('Deseja realmente sair da sua conta?')) {
+                    console.log('🚪 Fazendo logout...');
+                    localStorage.removeItem('currentUser');
+                    localStorage.removeItem('gymp2_current_user');
+                    alert('Logout realizado com sucesso!');
+                    window.location.reload();
+                }
+            });
+        
+            console.log('✅ Eventos do dropdown configurados');
+        }
+        
+        // ========== RESTAURAR INTERFACE PADRÃO ==========
+        function resetUIForLoggedOut() {
+            console.log('🔄 Restaurando interface para usuário deslogado...');
+            
+            // Remover header de usuário se existir
+            const userHeader = document.getElementById('userHeaderContainer');
+            if (userHeader) {
+                userHeader.remove();
+                console.log('🗑 Header de usuário removido');
+            }
+            
+            // Restaurar menu hamburguer será feito automaticamente ao recarregar
+        }
+        
+        // ========== INICIAR SISTEMA ==========
+        
+        // Executar quando a página carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('📄 DOM carregado, iniciando sistema...');
+            setTimeout(initLoginSystem, 100);
+        });
+        
+        // Executar também se a página já estiver carregada
+        if (document.readyState === 'complete' || document.readyState === 'interactive') {
+            console.log('⚡ Página já carregada, iniciando sistema...');
+            setTimeout(initLoginSystem, 100);
+        }
+        
+        // Observar mudanças no localStorage
+        window.addEventListener('storage', function(e) {
+            if ((e.key === 'currentUser' || e.key === 'gymp2_current_user')) {
+                console.log('🔄 Mudança no localStorage detectada, recarregando...');
+                setTimeout(() => {
+                    window.location.reload();
+                }, 500);
+            }
+        });
+        
+        console.log('🎯 Sistema de login carregado e pronto!');
+    </script>
+    
+    <!--JavaScript para aplicar configurações globais-->
+    <script>
+        // Aplicar configurações globais - PARA TODAS AS PÁGINAS
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Aplicando configurações globais...');
+            applyGlobalSettings();
+            
+            // Verificar se as configurações foram aplicadas
+            setTimeout(() => {
+                console.log('Configurações aplicadas:', {
+                    tema: localStorage.getItem('gym-theme'),
+                    fonte: localStorage.getItem('gym-fontSize'),
+                    bodyClass: document.body.className
+                });
+            }, 500);
+        });
+    
+        function applyGlobalSettings() {
+            // Carregar configurações salvas
+            const savedTheme = localStorage.getItem('gym-theme') || 'dark';
+            const savedFontSize = localStorage.getItem('gym-fontSize') || 'medium';
+            
+            console.log('Configurações carregadas:', { savedTheme, savedFontSize });
+            
+            // Aplicar tema
+            if (savedTheme === 'light') {
+                document.body.classList.add('light-mode');
+                console.log('Modo claro aplicado');
+            } else {
+                document.body.classList.remove('light-mode');
+                console.log('Modo escuro aplicado');
+            }
+            
+            // Aplicar tamanho da fonte
+            applyFontSize(savedFontSize);
+        }
+    
+        function applyFontSize(size) {
+            const sizes = {
+                'small': { 
+                    h1: '32px', h2: '24px', h3: '18px',
+                    normal: '14px', small: '12px',
+                    button: '14px'
+                },
+                'medium': { 
+                    h1: '42px', h2: '28px', h3: '22px',
+                    normal: '16px', small: '14px',
+                    button: '16px'
+                },
+                'large': { 
+                    h1: '52px', h2: '32px', h3: '26px',
+                    normal: '18px', small: '16px',
+                    button: '18px'
+                }
+            };
+    
+            const currentSizes = sizes[size];
+            
+            console.log('Aplicando tamanho de fonte:', size, currentSizes);
+            
+            // Aplicar a todos os elementos
+            setTimeout(() => {
+                // Títulos principais
+                document.querySelectorAll('h1').forEach(el => {
+                    el.style.fontSize = currentSizes.h1;
+                });
+                
+                // Títulos secundários
+                document.querySelectorAll('h2').forEach(el => {
+                    el.style.fontSize = currentSizes.h2;
+                });
+                
+                // Títulos terciários
+                document.querySelectorAll('h3').forEach(el => {
+                    el.style.fontSize = currentSizes.h3;
+                });
+                
+                // Textos normais
+                document.querySelectorAll('p, .setting-description, .feedback-text, .nav-link, .result-title, .profile-info p, .feedback-text').forEach(el => {
+                    el.style.fontSize = currentSizes.normal;
+                });
+                
+                // Botões
+                document.querySelectorAll('.gym-access-btn, .edit-profile-btn, .menu-search-btn').forEach(el => {
+                    el.style.fontSize = currentSizes.button;
+                });
+                
+                // Textos pequenos
+                document.querySelectorAll('.feedback-date, .setting-description, small, .result-description, .feedback-date').forEach(el => {
+                    el.style.fontSize = currentSizes.small;
+                });
+                
+                // Estatísticas
+                document.querySelectorAll('.stat-box p').forEach(el => {
+                    el.style.fontSize = currentSizes.h2;
+                });
+                
+                document.querySelectorAll('.stat-box h3').forEach(el => {
+                    el.style.fontSize = currentSizes.normal;
+                });
+    
+                console.log('Tamanhos de fonte aplicados com sucesso');
+            }, 100);
+        }
+    
+        // Função para forçar atualização (útil para debugging)
+        function forceUpdateSettings() {
+            console.log('Forçando atualização das configurações...');
+            applyGlobalSettings();
+        }
+    
+        // Adicionar listener para mudanças no localStorage (opcional)
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'gym-theme' || e.key === 'gym-fontSize') {
+                console.log('Configurações alteradas em outra aba, aplicando...');
+                applyGlobalSettings();
+            }
+        });
+    </script>
+    
+    <script>
+        // ========== FUNÇÃO PARA REDIRECIONAR PARA PERFIL ==========
+        function redirectToProfile() {
+            const userData = localStorage.getItem('currentUser') || localStorage.getItem('gymp2_current_user');
+            
+            if (userData) {
+                try {
+                    const user = JSON.parse(userData);
+                    console.log(' Redirecionando para perfil do usuário:', user.name);
+                    window.location.href = 'perfil.html';
+                } catch (error) {
+                    console.error(' Erro ao redirecionar:', error);
+                    window.location.href = 'login-gym.html';
+                }
+            } else {
+                alert('Você precisa fazer login primeiro!');
+                window.location.href = 'login-gym.html';
+            }
+        }
+    </script>
+</body>
+</html>
